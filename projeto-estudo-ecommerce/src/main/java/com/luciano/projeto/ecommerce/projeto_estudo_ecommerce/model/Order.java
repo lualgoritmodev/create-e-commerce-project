@@ -1,40 +1,31 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.OrderStatus;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-@Entity
+
 @Table(name = "tb_order")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotNull
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @NotNull
-    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal total;
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
     private OrderStatus status;
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id", unique = true)
     private Payment payment;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> items = new ArrayList<>();
 
     public Order(UUID id, LocalDateTime createdAt, BigDecimal total, OrderStatus status, Customer customer) {

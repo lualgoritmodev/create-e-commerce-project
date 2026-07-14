@@ -1,44 +1,35 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.Status;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
-@Entity
 @Table(name = "tb_customer")
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotBlank
-    @Column(nullable = false, length = 100)
     private String name;
     @CPF
     @NotBlank
-    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
     @Email
     @NotBlank
-    @Column(nullable = false, unique = true, length = 150)
     private String email;
-    @Column(nullable = false)
+
     private LocalDate birthDate;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;
 
-    @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
     public Customer() {}

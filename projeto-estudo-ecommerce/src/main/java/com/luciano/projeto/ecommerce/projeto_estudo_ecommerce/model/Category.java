@@ -1,25 +1,21 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-@Entity
 @Table(name = "tb_category")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotBlank
-    @Column(nullable = false, length = 100)
     private String name;
     @NotNull
-    @Column(nullable = false)
     private Boolean active = true;
-    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
     public Category() {}

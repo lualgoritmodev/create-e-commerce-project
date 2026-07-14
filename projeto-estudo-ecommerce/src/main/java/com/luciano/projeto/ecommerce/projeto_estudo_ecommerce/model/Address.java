@@ -1,49 +1,39 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Entity
 @Table(name = "tb_address")
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank
-    @Column(nullable = false, length = 150)
     private String street;
 
     @NotBlank
-    @Column(nullable = false, length = 20)
     private String number;
-
-    @Column(length = 100)
+    @NotBlank
     private String complement;
 
     @NotBlank
-    @Column(nullable = false, length = 100)
     private String neighborhood;
 
     @NotBlank
-    @Column(nullable = false, length = 100)
     private String city;
 
     @NotBlank
-    @Column(nullable = false, length = 2)
     private String state;
 
     @NotBlank
-    @Column(nullable = false, length = 8)
     private String zipCode;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     public Address() {
