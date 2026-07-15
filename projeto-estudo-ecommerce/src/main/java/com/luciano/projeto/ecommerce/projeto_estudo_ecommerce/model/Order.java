@@ -31,7 +31,6 @@ public class Order {
                  OrderStatus status,
                  UUID customerId) {
         this.id = id;
-        this.createdAt = createdAt;
         this.total = total;
         this.status = status;
         this.customerId = customerId;
