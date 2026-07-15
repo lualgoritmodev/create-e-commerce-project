@@ -2,38 +2,39 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.OrderStatus;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.Id;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-@Table(name = "tb_order")
+@Table("tb_order")
 public class Order {
     @Id
     private UUID id;
     @NotNull
+    @Column("created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
     @NotNull
+    @Column("total")
     private BigDecimal total;
     @NotNull
+    @Column("order_status")
     private OrderStatus status;
     @NotNull
-    private Customer customer;
+    @Column("customer_id")
+    private UUID customerId;
 
-    private Payment payment;
-
-    private List<OrderItem> items = new ArrayList<>();
-
-    public Order(UUID id, LocalDateTime createdAt, BigDecimal total, OrderStatus status, Customer customer) {
+    public Order(UUID id, LocalDateTime createdAt,
+                 BigDecimal total,
+                 OrderStatus status,
+                 UUID customerId) {
         this.id = id;
         this.createdAt = createdAt;
         this.total = total;
         this.status = status;
-        this.customer = customer;
+        this.customerId = customerId;
     }
 
     public Order() {}
@@ -62,33 +63,22 @@ public class Order {
         this.status = status;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+//    public void setCustomerId(UUID customerId) {
+//        this.customerId = customerId;
+//    }
 
-    public Payment getPayment() {
-        return payment;
-    }
 
-    public void assignPayment(Payment payment) {
+//    public void assignPayment(UUID paymentId) {
+//
+//        if (paymentId == null) {
+//            throw new IllegalArgumentException("Payment cannot be null");
+//        }
+//        this.paymentId = paymentId;
+//        paymentId.setOrder(this);
+//    }
 
-        if (payment == null) {
-            throw new IllegalArgumentException("Payment cannot be null");
-        }
-        this.payment = payment;
-        payment.setOrder(this);
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public void addItem(OrderItem item) {
-        items.add(item);
-        item.setOrder(this);
-    }
 }

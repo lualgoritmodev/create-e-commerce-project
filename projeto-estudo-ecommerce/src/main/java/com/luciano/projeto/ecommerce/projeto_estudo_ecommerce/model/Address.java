@@ -3,42 +3,54 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table(name = "tb_address")
+@Table("tb_address")
 public class Address {
 
     @Id
     private UUID id;
 
     @NotBlank
+    @Column("street")
     private String street;
 
     @NotBlank
+    @Column("number")
     private String number;
     @NotBlank
+    @Column("complement")
     private String complement;
 
     @NotBlank
+    @Column("neighborhood")
     private String neighborhood;
 
     @NotBlank
+    @Column("city")
     private String city;
 
     @NotBlank
+    @Column("state")
     private String state;
 
     @NotBlank
+    @Column("zup_code")
     private String zipCode;
 
     @NotNull
-    private Customer customer;
+    @Column("customer_id")
+    private UUID customerId;
 
     public Address() {
     }
-    public Address(UUID id, String street, String number, String complement, String neighborhood, String city, String state, String zipCode, Customer customer) {
+    public Address(UUID id, String street, String number,
+                   String complement, String neighborhood,
+                   String city, String state, String zipCode,
+                   UUID customer) {
         this.id = id;
         this.street = street;
         this.number = number;
@@ -47,7 +59,7 @@ public class Address {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        this.customer = customer;
+        this.customerId = customer;
     }
 
     public UUID getId() {
@@ -114,12 +126,12 @@ public class Address {
         this.zipCode = zipCode;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
 }

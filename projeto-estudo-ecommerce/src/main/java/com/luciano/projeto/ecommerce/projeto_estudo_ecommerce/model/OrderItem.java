@@ -2,55 +2,62 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
-@Table(name = "tb_order_item")
+@Table("tb_order_item")
 public class OrderItem {
     @Id
     private UUID id;
     @NotNull
+    @Column("quantity")
     private Integer quantity;
     @NotNull
+    @Column("unit_price")
     private BigDecimal unitPrice;
     @NotNull
+    @Column("sub_total")
     private BigDecimal subtotal;
     @NotNull
-    private Order order;
+    @Column("order_id")
+    private UUID orderId;
     @NotNull
-    private Product product;
+    @Column("product_id")
+    private UUID productId;
 
     public OrderItem() {}
-    public OrderItem(UUID id, Order order,
+
+    public OrderItem(UUID id, UUID orderId,
                      Integer quantity,
                      BigDecimal unitPrice,
                      BigDecimal subtotal,
-                     Product product) {
+                     UUID productId) {
         this.id = id;
-        this.order = order;
+        this.orderId = orderId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.subtotal = subtotal;
-        this.product = product;
+        this.productId = productId;
     }
     public UUID getId() {
         return id;
     }
 
-    public Order getOrder() {
-        return order;
+    public UUID getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(UUID orderId) {
+        this.orderId = orderId;
     }
 
-    public Product getProduct() {
-        return product;
+    public UUID getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProduct(UUID productId) {
+        this.productId = productId;
     }
 
     public Integer getQuantity() {

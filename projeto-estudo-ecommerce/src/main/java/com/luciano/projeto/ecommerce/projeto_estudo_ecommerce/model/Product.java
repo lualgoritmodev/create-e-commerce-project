@@ -3,12 +3,11 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Table("tb_product")
@@ -18,27 +17,31 @@ public class Product {
     private UUID id;
 
     @NotBlank
+    @Column("name")
     private String name;
 
     @NotBlank
+    @Column("description")
     private String description;
 
     @NotNull
+    @Column("price")
     private BigDecimal price;
 
     @NotNull
+    @Column("active")
     private Boolean active;
 
     @NotNull
+    @Column("created_at")
     private LocalDateTime createdAt;
 
     @NotNull
-    private Category category;
-
-    private List<OrderItem> items = new ArrayList<>();
-
-    @NotNull
+    @Column("stock")
     private Integer stock;
+    @NotNull
+    @Column("category_id")
+    private UUID categoryId;
 
     public Product() {
     }
@@ -50,7 +53,8 @@ public class Product {
             BigDecimal price,
             Boolean active,
             LocalDateTime createdAt,
-            Integer stock
+            Integer stock,
+            UUID categoryId
     ) {
         this.id = id;
         this.name = name;
@@ -59,6 +63,7 @@ public class Product {
         this.active = active;
         this.createdAt = createdAt;
         this.stock = stock;
+        this.categoryId = categoryId;
     }
 
     public UUID getId() {
@@ -105,9 +110,6 @@ public class Product {
         return createdAt;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
     public Integer getStock() {
         return stock;
     }
@@ -115,4 +117,12 @@ public class Product {
     public void changeStock(Integer stock) {
         this.stock = stock;
     }
+
+    public UUID getCategoryId() {
+        return categoryId;
+    }
+
+    //    public void setCategoryId(UUID categoryId) {
+//        this.categoryId = categoryId;
+//    }
 }
