@@ -34,7 +34,7 @@ public class Order {
         this.total = total;
         this.status = status;
         this.customerId = customerId;
-        this.createdAt = createdAt
+        this.createdAt = createdAt;
     }
 
     public Order() {}
