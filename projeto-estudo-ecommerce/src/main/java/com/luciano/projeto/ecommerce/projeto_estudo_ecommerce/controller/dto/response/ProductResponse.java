@@ -16,13 +16,13 @@ public record ProductResponse(
         LocalDateTime createdAt,
         UUID categoryId
 ) {
-    public static ProductResponse fromEntity(Product product) {
+    public static ProductResponse from(Product product) {
         return new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getActive(),
+                product.getChangeActive(),
                 product.getStock(),
                 product.getCreatedAt(),
                 product.getCategoryId()
