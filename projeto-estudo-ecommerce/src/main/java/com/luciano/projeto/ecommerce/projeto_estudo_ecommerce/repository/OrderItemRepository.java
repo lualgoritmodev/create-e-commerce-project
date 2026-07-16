@@ -2,9 +2,13 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.OrderItem;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
-public interface OrderItemRepository extends
-        ReactiveCrudRepository<OrderItem, UUID> {
+public interface OrderItemRepository
+        extends ReactiveCrudRepository<OrderItem, UUID> {
+
+    Flux<OrderItem> findByOrderId(UUID orderItemId);
+    Flux<OrderItem> findByProductId(UUID productId);
 }
