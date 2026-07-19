@@ -30,7 +30,7 @@ public class Product {
 
     @NotNull
     @Column("active")
-    private Boolean changeActive;
+    private Boolean active;
 
     @NotNull
     @Column("created_at")
@@ -60,7 +60,7 @@ public class Product {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.changeActive = active;
+        this.active = active;
         this.createdAt = createdAt;
         this.stock = stock;
         this.categoryId = categoryId;
@@ -98,12 +98,12 @@ public class Product {
         this.price = price;
     }
 
-    public Boolean getChangeActive() {
-        return changeActive;
+    public Boolean getActive() {
+        return active;
     }
 
     public void changeActive(Boolean active) {
-        this.changeActive = active;
+        this.active = active;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -38,7 +38,7 @@ public class Address {
     private String state;
 
     @NotBlank
-    @Column("zup_code")
+    @Column("zip_code")
     private String zipCode;
 
     @NotNull

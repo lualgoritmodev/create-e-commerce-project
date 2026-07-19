@@ -1,0 +1,5 @@
+INSERT INTO tb_category (id, name, active)
+VALUES
+    ('11111111-1111-1111-1111-111111111111', 'Informática', TRUE),
+    ('22222222-2222-2222-2222-222222222222', 'Celulares', TRUE),
+    ('33333333-3333-3333-3333-333333333333', 'Games', TRUE);

@@ -3,6 +3,13 @@ spring:
     name: projeto-estudo-ecommerce
 
   r2dbc:
-    url: "r2dbc:postgresql://localhost:5432/ecommerce_reactive"
-    username: "ecommerce"
-    password: "123456"
+    url: r2dbc:postgresql://localhost:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    locations: classpath:db/migration

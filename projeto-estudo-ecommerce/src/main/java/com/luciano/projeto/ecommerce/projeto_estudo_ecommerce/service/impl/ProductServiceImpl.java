@@ -2,6 +2,7 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
@@ -26,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
     public Mono<ProductResponse> createProduct(ProductRequest request) {
          return categoryRepository.findById(request.categoryId())
                  .switchIfEmpty(Mono.error(
-                         new IllegalArgumentException(
-                                 "Category Not Found"))
+                         new CategoryNotFoundException(
+                                 request.categoryId()))
                  ).flatMap(category -> {
                         Product product = request.toEntity();
                         product.defineId(UUID.randomUUID());

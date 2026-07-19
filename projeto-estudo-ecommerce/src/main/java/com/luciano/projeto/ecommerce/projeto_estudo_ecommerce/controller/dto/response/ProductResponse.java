@@ -22,7 +22,7 @@ public record ProductResponse(
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getChangeActive(),
+                product.getActive(),
                 product.getStock(),
                 product.getCreatedAt(),
                 product.getCategoryId()
