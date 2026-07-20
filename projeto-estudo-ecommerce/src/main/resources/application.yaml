@@ -13,3 +13,7 @@ spring:
     user: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     locations: classpath:db/migration
+
+logging:
+  level:
+    org.springframework.r2dbc.core: DEBUG

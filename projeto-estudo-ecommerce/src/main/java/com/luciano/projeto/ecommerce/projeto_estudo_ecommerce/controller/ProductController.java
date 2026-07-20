@@ -29,11 +29,14 @@ public class ProductController {
                                 .body(response));
 
     }
-    @GetMapping("/productId")
+    @GetMapping("/{productId}")
     public Mono<ResponseEntity<ProductResponse>> getProductById(
             @PathVariable UUID productId
     ) {
         return productService.getProductById(productId)
-                .map(ResponseEntity::ok);
+                .map(response -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(response));
     }
+
 }
