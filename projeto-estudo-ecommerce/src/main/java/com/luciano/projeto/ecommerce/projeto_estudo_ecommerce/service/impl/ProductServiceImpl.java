@@ -10,6 +10,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.Product
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -48,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId).switchIfEmpty(
                 Mono.error(new ProductNotFoundException(productId))
         ).map(ProductResponse::from);
+    }
+
+    @Override
+    public Flux<ProductResponse> getAllProducts() {
+        return productRepository.findAll().map(ProductResponse::from);
     }
 
 }
