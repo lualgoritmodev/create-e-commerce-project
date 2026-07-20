@@ -3,6 +3,7 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.CategoryNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
@@ -36,6 +37,13 @@ public class ProductServiceImpl implements ProductService {
                         product.defineCreatedAt(LocalDateTime.now());
                         return productRepository.save(product);
                  }).map(ProductResponse::from);
+    }
+
+    @Override
+    public Mono<ProductResponse> getProductById(UUID productId) {
+        return productRepository.findById(productId).switchIfEmpty(
+                Mono.error(new ProductNotFoundException(productId))
+        ).map(ProductResponse::from);
     }
 
 }

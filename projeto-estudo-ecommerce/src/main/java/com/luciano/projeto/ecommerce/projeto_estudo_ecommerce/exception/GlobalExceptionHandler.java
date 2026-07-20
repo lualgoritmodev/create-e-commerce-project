@@ -30,4 +30,23 @@ public class GlobalExceptionHandler {
                         .body(response)
         );
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public Mono<ResponseEntity<ApiErrorResponse>>handleProductKotFound(
+            ProductNotFoundException exception,
+            ServerWebExchange exchange
+    ) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                exchange.getRequest().getPath().value()
+        );
+
+        return Mono.just(
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(response)
+        );
+    }
 }

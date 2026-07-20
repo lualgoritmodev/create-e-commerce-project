@@ -4,6 +4,9 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.req
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 public interface ProductService {
     Mono<ProductResponse> createProduct(ProductRequest productRequest);
+    Mono<ProductResponse> getProductById(UUID uuid);
 }

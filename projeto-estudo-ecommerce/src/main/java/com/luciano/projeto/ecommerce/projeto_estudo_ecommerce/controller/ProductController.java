@@ -3,14 +3,14 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
+import jakarta.validation.Path;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -29,5 +29,11 @@ public class ProductController {
                                 .body(response));
 
     }
-
+    @GetMapping("/productId")
+    public Mono<ResponseEntity<ProductResponse>> getProductById(
+            @PathVariable UUID productId
+    ) {
+        return productService.getProductById(productId)
+                .map(ResponseEntity::ok);
+    }
 }
