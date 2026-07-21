@@ -2,8 +2,9 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.CategoryNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.ProductNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.AllProductNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.CategoryNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
@@ -53,7 +54,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Flux<ProductResponse> getAllProducts() {
-        return productRepository.findAll().map(ProductResponse::from);
+        return productRepository.findAll().switchIfEmpty(
+                Mono.error(new AllProductNotFoundException())
+        ).map(ProductResponse::from);
+
     }
 
 }

@@ -3,7 +3,6 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
-import jakarta.validation.Path;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ public class ProductController {
                                 .body(response));
 
     }
-    @GetMapping("/{productId}")
+    @GetMapping("/product/{productId}")
     public Mono<ResponseEntity<ProductResponse>> getProductById(
             @PathVariable UUID productId
     ) {
