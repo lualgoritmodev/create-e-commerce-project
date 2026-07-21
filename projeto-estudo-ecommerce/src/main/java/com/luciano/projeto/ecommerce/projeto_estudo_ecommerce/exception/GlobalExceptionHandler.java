@@ -1,7 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.CategoryNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.dtoerrorresponse.ApiErrorResponse;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.response.ApiErrorResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +13,34 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private ApiErrorResponse buildErrorResponse(
+            HttpStatus status,
+            String message,
+            ServerWebExchange exchange
+    ) {
+        return new ApiErrorResponse(
+                LocalDateTime.now(),
+                status.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                message,
+                exchange.getRequest().getPath().value()
+        );
+    }
     @ExceptionHandler(ResourceNotFoundException.class)
-    public Mono<ResponseEntity<ApiErrorResponse>> handleNotFound(
+    public ResponseEntity<ApiErrorResponse> handleResourceNotFound(
             ResourceNotFoundException exception,
             ServerWebExchange exchange
     ) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
+        ApiErrorResponse response =  buildErrorResponse(
+                HttpStatus.NOT_FOUND,
                 exception.getMessage(),
-                exchange.getRequest().getPath().value()
+                exchange
         );
 
-        return Mono.just(
+        return
                 ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(response)
-        );
+                        .body(response);
     }
 
 //    @ExceptionHandler(ProductNotFoundException.class)
@@ -50,5 +60,6 @@ public class GlobalExceptionHandler {
 //                ResponseEntity.status(HttpStatus.NOT_FOUND)
 //                        .body(response)
 //        );
+
 //    }
 }

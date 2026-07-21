@@ -39,8 +39,8 @@ public class ProductController {
                         .body(response));
     }
     @GetMapping("/all")
-    public Mono<ResponseEntity<Flux<ProductResponse>>> getAllProducts() {
-        return Mono.just(
+    public Flux<ResponseEntity<Flux<ProductResponse>>> getAllProducts() {
+        return Flux.just(
                 ResponseEntity.ok(
                         productService.getAllProducts()
                 )

@@ -1,4 +1,4 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.dtoerrorresponse;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.response;
 
 import java.time.LocalDateTime;
 

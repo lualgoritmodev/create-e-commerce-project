@@ -54,9 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Flux<ProductResponse> getAllProducts() {
-        return productRepository.findAll().switchIfEmpty(
-                Mono.error(new AllProductNotFoundException())
-        ).map(ProductResponse::from);
+        return productRepository.findAll().map(ProductResponse::from);
 
     }
 
