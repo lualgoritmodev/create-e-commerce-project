@@ -39,12 +39,8 @@ public class ProductController {
                         .body(response));
     }
     @GetMapping("/all")
-    public Flux<ResponseEntity<Flux<ProductResponse>>> getAllProducts() {
-        return Flux.just(
-                ResponseEntity.ok(
-                        productService.getAllProducts()
-                )
-        );
+    public ResponseEntity<Flux<ProductResponse>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
 }
