@@ -10,7 +10,6 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.Categor
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,8 +34,7 @@ public class ProductServiceImpl implements ProductService {
     public Mono<ProductResponse> createProduct(ProductRequest request) {
          return categoryRepository.findById(request.categoryId())
                  .switchIfEmpty(Mono.error(
-                         new CategoryNotFoundException(
-                                 request.categoryId()))
+                         () -> new CategoryNotFoundException(request.categoryId()))
                  ).flatMap(category -> {
                         Product product = request.toEntity();
                         product.defineId(UUID.randomUUID());
@@ -50,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<ProductResponse> getProductById(UUID productId) {
         return productRepository.findById(productId).switchIfEmpty(
-                Mono.error(new ProductNotFoundException(productId))
+                Mono.error(() -> new ProductNotFoundException(productId))
         ).map(ProductResponse::from);
     }
 
@@ -65,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
             ProductUpdateRequest request) {
 
         return productRepository.findById(productId)
-                .switchIfEmpty(Mono.error(new ProductNotFoundException(productId))
+                .switchIfEmpty(Mono.error(() -> new ProductNotFoundException(productId))
                 )
                 .map(product -> {
                     product.setName(request.name());
@@ -76,8 +74,14 @@ public class ProductServiceImpl implements ProductService {
 
                     return product;
                 })
-                .flatMap(productRepository::save)
+                .flatMap(entityTemplate::update)
                 .map(ProductResponse::from);
+    }
+
+    public Mono<Void> deleteProductById(UUID productId) {
+        return productRepository.findById(productId)
+                .switchIfEmpty(Mono.error(() -> new ProductNotFoundException(productId)))
+                .flatMap(entityTemplate::delete).then();
     }
 
 }

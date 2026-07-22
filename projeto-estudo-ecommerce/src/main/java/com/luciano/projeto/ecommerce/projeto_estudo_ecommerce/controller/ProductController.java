@@ -53,4 +53,11 @@ public class ProductController {
                         .map(ResponseEntity::ok);
 
     }
+    @DeleteMapping("/delete/{productId}")
+    public Mono<ResponseEntity<Void>> deleteProductById(
+            @PathVariable UUID productId
+    ) {
+         return productService.deleteProductById(productId)
+                 .thenReturn(ResponseEntity.<Void>noContent().build());
+    }
 }

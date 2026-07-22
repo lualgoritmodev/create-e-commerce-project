@@ -13,24 +13,19 @@ public record ProductUpdateRequest(
 
         @NotBlank(message = "Product name is required")
         String name,
-
         @NotBlank(message = "Product description is required")
         String description,
-
         @NotNull(message = "Product price is required")
         @DecimalMin(
                 value = "0.01",
                 message = "Product price must be greater than zero"
         )
         BigDecimal price,
-
         @NotNull
         boolean active,
         @NotNull(message = "Product stock is required")
         @PositiveOrZero(message = "Product stock cannot be negative")
-        Integer stock,
-
-        UUID categoryId
+        Integer stock
 
 ) {
     public Product toEntity() {
@@ -39,10 +34,10 @@ public record ProductUpdateRequest(
                 this.name,
                 this.description,
                 this.price,
-                null,
+                this.active,
                 null,
                 this.stock,
-                this.categoryId
+                null
         );
     }
 }
