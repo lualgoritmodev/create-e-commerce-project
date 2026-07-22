@@ -1,8 +1,8 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.AllProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
@@ -10,6 +10,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.Categor
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,8 +40,9 @@ public class ProductServiceImpl implements ProductService {
                  ).flatMap(category -> {
                         Product product = request.toEntity();
                         product.defineId(UUID.randomUUID());
-                        product.changeActive(true);
+                        product.setActive(true);
                         product.defineCreatedAt(LocalDateTime.now());
+
                         return entityTemplate.insert(product);
                  }).map(ProductResponse::from);
     }
@@ -56,6 +58,26 @@ public class ProductServiceImpl implements ProductService {
     public Flux<ProductResponse> getAllProducts() {
         return productRepository.findAll().map(ProductResponse::from);
 
+    }
+    @Override
+    public Mono<ProductResponse> updateProduct(
+            UUID productId,
+            ProductUpdateRequest request) {
+
+        return productRepository.findById(productId)
+                .switchIfEmpty(Mono.error(new ProductNotFoundException(productId))
+                )
+                .map(product -> {
+                    product.setName(request.name());
+                    product.setDescription(request.description());
+                    product.setPrice(request.price());
+                    product.setActive(request.active());
+                    product.setStock(request.stock());
+
+                    return product;
+                })
+                .flatMap(productRepository::save)
+                .map(ProductResponse::from);
     }
 
 }

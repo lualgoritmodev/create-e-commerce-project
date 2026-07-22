@@ -78,7 +78,7 @@ public class Product {
         return name;
     }
 
-    public void changeName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -86,7 +86,7 @@ public class Product {
         return description;
     }
 
-    public void changeDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -94,7 +94,7 @@ public class Product {
         return price;
     }
 
-    public void changePrice(BigDecimal price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -102,7 +102,7 @@ public class Product {
         return active;
     }
 
-    public void changeActive(Boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -114,12 +114,15 @@ public class Product {
         return stock;
     }
 
-    public void changeStock(Integer stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
     }
 
     public UUID getCategoryId() {
         return categoryId;
+    }
+    public void setCategoryId(UUID categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void defineCreatedAt(LocalDateTime createdAt) {

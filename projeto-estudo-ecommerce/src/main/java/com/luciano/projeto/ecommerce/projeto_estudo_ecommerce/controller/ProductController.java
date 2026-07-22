@@ -1,6 +1,7 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import jakarta.validation.Valid;
@@ -43,4 +44,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @PutMapping("/update/{productId}")
+    public Mono<ResponseEntity<ProductResponse>> updateProduct(
+            @Valid @RequestBody ProductUpdateRequest productUpdateRequest,
+            @PathVariable UUID productId
+            ) {
+                return productService.updateProduct(productId, productUpdateRequest)
+                        .map(ResponseEntity::ok);
+
+    }
 }
