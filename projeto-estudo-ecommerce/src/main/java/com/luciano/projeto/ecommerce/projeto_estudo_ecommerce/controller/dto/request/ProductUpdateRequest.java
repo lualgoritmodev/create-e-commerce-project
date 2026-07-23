@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public record ProductUpdateRequest(
 
@@ -40,4 +39,16 @@ public record ProductUpdateRequest(
                 null
         );
     }
+
+    public Product updateEntity(Product product) {
+                product.setName(this.name());
+                product.setDescription(this.description());
+                product.setPrice(this.price());
+                product.setActive(this.active());
+                product.setStock(this.stock());
+
+                return product;
+
+    }
+
 }

@@ -30,7 +30,7 @@ public class ProductController {
                                 .body(response));
 
     }
-    @GetMapping("/product/{productId}")
+    @GetMapping("/{productId}")
     public Mono<ResponseEntity<ProductResponse>> getProductById(
             @PathVariable UUID productId
     ) {
@@ -39,12 +39,12 @@ public class ProductController {
                         .status(HttpStatus.OK)
                         .body(response));
     }
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<Flux<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @PutMapping("/update/{productId}")
+    @PutMapping("/{productId}")
     public Mono<ResponseEntity<ProductResponse>> updateProduct(
             @Valid @RequestBody ProductUpdateRequest productUpdateRequest,
             @PathVariable UUID productId
@@ -53,7 +53,7 @@ public class ProductController {
                         .map(ResponseEntity::ok);
 
     }
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     public Mono<ResponseEntity<Void>> deleteProductById(
             @PathVariable UUID productId
     ) {

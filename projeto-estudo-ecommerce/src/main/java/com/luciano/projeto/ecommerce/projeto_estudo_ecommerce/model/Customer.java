@@ -29,17 +29,21 @@ public class Customer {
     private LocalDate birthDate;
     @Column("status")
     private Status status = Status.INACTIVE;
+    @Column("active")
+    @NotNull
+    private Boolean active;
 
     public Customer() {}
     public Customer(UUID id, String name, String cpf,
                     String email, LocalDate birthDate,
-                    Status status) {
+                    Status status, Boolean active) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.email = email;
         this.birthDate = birthDate;
         this.status = status;
+        this.active = active;
     }
 
     public UUID getId() {
@@ -85,7 +89,13 @@ public class Customer {
         this.email = email;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
 
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 //    public void addOrder(Order order) {
 //        orders.add(order);
 //        order.setCustomerId(this);

@@ -65,15 +65,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId)
                 .switchIfEmpty(Mono.error(() -> new ProductNotFoundException(productId))
                 )
-                .map(product -> {
-                    product.setName(request.name());
-                    product.setDescription(request.description());
-                    product.setPrice(request.price());
-                    product.setActive(request.active());
-                    product.setStock(request.stock());
-
-                    return product;
-                })
+                .map(request::updateEntity)
                 .flatMap(entityTemplate::update)
                 .map(ProductResponse::from);
     }
@@ -81,7 +73,11 @@ public class ProductServiceImpl implements ProductService {
     public Mono<Void> deleteProductById(UUID productId) {
         return productRepository.findById(productId)
                 .switchIfEmpty(Mono.error(() -> new ProductNotFoundException(productId)))
-                .flatMap(entityTemplate::delete).then();
+                .map(product -> {
+                    product.deactivate();
+                    return product; })
+                .flatMap(entityTemplate::update)
+                .then();
     }
 
 }

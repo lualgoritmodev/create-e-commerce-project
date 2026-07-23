@@ -22,6 +22,10 @@ public class Order {
     @NotNull
     @Column("order_status")
     private OrderStatus status;
+
+    @Column("active")
+    @NotNull
+    private Boolean active;
     @NotNull
     @Column("customer_id")
     private UUID customerId;
@@ -29,10 +33,12 @@ public class Order {
     public Order(UUID id, LocalDateTime createdAt,
                  BigDecimal total,
                  OrderStatus status,
+                 Boolean active,
                  UUID customerId) {
         this.id = id;
         this.total = total;
         this.status = status;
+        this.active = active;
         this.customerId = customerId;
         this.createdAt = createdAt;
     }
@@ -67,6 +73,13 @@ public class Order {
         return customerId;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 //    public void setCustomerId(UUID customerId) {
 //        this.customerId = customerId;
 //    }

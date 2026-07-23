@@ -128,6 +128,11 @@ public class Product {
     public void defineCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
     //    public void setCategoryId(UUID categoryId) {
 //        this.categoryId = categoryId;
 //    }

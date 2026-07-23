@@ -21,6 +21,10 @@ public class Payment {
     @NotNull
     @Column("payment_status")
     private PaymentStatus status;
+
+    @Column("active")
+    @NotNull
+    private Boolean active;
     @NotNull
     @Column("value")
     private BigDecimal value;
@@ -36,11 +40,13 @@ public class Payment {
 
     public Payment(UUID id, PaymentMethod method,
                    PaymentStatus status,
+                   Boolean active,
                    BigDecimal value,
                    LocalDateTime paymentDate, UUID orderId) {
         this.id = id;
         this.method = method;
         this.status = status;
+        this.active = active;
         this.value = value;
         this.paymentDate = paymentDate;
         this.orderId = orderId;
