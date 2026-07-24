@@ -36,12 +36,15 @@ public class ProductServiceImpl implements ProductService {
                  .switchIfEmpty(Mono.error(
                          () -> new CategoryNotFoundException(request.categoryId()))
                  ).flatMap(category -> {
-                        Product product = request.toEntity();
-                        product.defineId(UUID.randomUUID());
-                        product.setActive(true);
-                        product.defineCreatedAt(LocalDateTime.now());
-
+                        Product product = Product.create(
+                                request.name(),
+                                request.description(),
+                                request.price(),
+                                request.stock(),
+                                request.categoryId()
+                        );
                         return entityTemplate.insert(product);
+
                  }).map(ProductResponse::from);
     }
 

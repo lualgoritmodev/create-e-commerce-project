@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.PositiveOrZero;
 
-import javax.swing.text.StyledEditorKit;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -23,36 +22,9 @@ public record ProductRequest(
         @DecimalMin("0.01")
         @Digits(integer = 8, fraction = 2)
         BigDecimal price,
-
-        @NotNull
-        Boolean active,
-
         @NotNull
         @PositiveOrZero
         Integer stock,
         @NotNull
         UUID categoryId
-) {
-
-    public Product toEntity() {
-        return new Product(
-                null,
-                this.name,
-                this.description,
-                this.price,
-                null,
-                null,
-                this.stock,
-                this.categoryId
-        );
-    }
-
-    public Product updateEntity(Product product) {
-
-        product.setActive(this.active());
-
-        return product;
-
-    }
-
-}
+) {}

@@ -28,17 +28,16 @@ public class Product {
     @Column("price")
     private BigDecimal price;
 
-    @NotNull
     @Column("active")
-    private Boolean active;
+    private boolean isActive;
 
     @NotNull
     @Column("created_at")
     private LocalDateTime createdAt;
 
-    @NotNull
     @Column("stock")
-    private Integer stock;
+    private int stock;
+
     @NotNull
     @Column("category_id")
     private UUID categoryId;
@@ -51,16 +50,16 @@ public class Product {
             String name,
             String description,
             BigDecimal price,
-            Boolean active,
+            boolean active,
             LocalDateTime createdAt,
-            Integer stock,
+            int stock,
             UUID categoryId
     ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.active = active;
+        this.isActive = active;
         this.createdAt = createdAt;
         this.stock = stock;
         this.categoryId = categoryId;
@@ -78,62 +77,108 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void rename(String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O nome do produto não pode estar vazio."
+            );
+        }
+
+        this.name = newName;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void changeDescription(String newDescription) {
+        if (newDescription == null || newDescription.isBlank()) {
+            throw new IllegalArgumentException(
+                    "A descrição do produto não pode estar vazia."
+            );
+        }
+
+        this.description = newDescription;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void changePrice(BigDecimal newPrice) {
+        if (newPrice == null || newPrice.signum() <= 0) {
+            throw new IllegalArgumentException(
+                    "O preço deve ser informado e maior que zero."
+            );
+        }
+
+        this.price = newPrice;
     }
 
-    public Boolean getActive() {
-        return active;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void activate() {
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public UUID getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(UUID categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public void defineCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public void deactivate() {
-        this.active = false;
+    public int getStock() {
+        return stock;
     }
 
-    //    public void setCategoryId(UUID categoryId) {
-//        this.categoryId = categoryId;
-//    }
+    public void updateStock(int name) {
+        if (name < 0) {
+            throw new IllegalArgumentException(
+                    "O estoque não pode ser negativo."
+            );
+        }
+
+        this.stock = name;
+    }
+
+    public void defineCategory(UUID categoryId) {
+        if(categoryId == null) {
+            throw new IllegalArgumentException("CategoryId is required");
+        }
+
+         this.categoryId = categoryId;
+    }
+    public UUID getCategoryId() {
+        return categoryId;
+    }
+
+    public static Product create(
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stock,
+            UUID categoryId
+
+    ) {
+        Product product =  new Product();
+        product.defineId(UUID.randomUUID());
+        product.rename(name);
+        product.changeDescription(description);
+        product.changePrice(price);
+        product.updateStock(stock);
+        product.activate();
+        product.defineCreatedAt(LocalDateTime.now());
+        product.defineCategory(categoryId);
+
+        return product;
+    }
+
 }
