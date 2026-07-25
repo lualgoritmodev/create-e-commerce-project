@@ -91,16 +91,15 @@ public class Product {
         return description;
     }
 
-    public void changeDescription(String newDescription) {
-        if (newDescription == null || newDescription.isBlank()) {
+    public void changeDescription(String description) {
+        if (description == null || description.isBlank()) {
             throw new IllegalArgumentException(
                     "A descrição do produto não pode estar vazia."
             );
         }
 
-        this.description = newDescription;
+        this.description = description;
     }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -159,7 +158,20 @@ public class Product {
     public UUID getCategoryId() {
         return categoryId;
     }
+    public boolean isOutOfStock() {
+        return this.stock <= 0;
+    }
 
+    public boolean hasEnoughStock(int quantity) {
+        return stock >= quantity;
+    }
+    public boolean isInactive() {
+        return !this.isActive();
+    }
+    public boolean canSell(int quantity) {
+        return isActive() &&
+                !isOutOfStock() && hasEnoughStock(quantity);
+    }
     public static Product create(
             String name,
             String description,
