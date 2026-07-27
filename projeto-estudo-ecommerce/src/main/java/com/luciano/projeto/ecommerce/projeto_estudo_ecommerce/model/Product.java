@@ -35,9 +35,10 @@ public class Product {
     @Column("created_at")
     private LocalDateTime createdAt;
 
-    @Column("stock")
-    private int stock;
-
+    @Column("available_stock")
+    private int availableStock;
+    @Column("reserved_stock")
+    private int reservedStock;
     @NotNull
     @Column("category_id")
     private UUID categoryId;
@@ -52,7 +53,6 @@ public class Product {
             BigDecimal price,
             boolean active,
             LocalDateTime createdAt,
-            int stock,
             UUID categoryId
     ) {
         this.id = id;
@@ -61,7 +61,6 @@ public class Product {
         this.price = price;
         this.isActive = active;
         this.createdAt = createdAt;
-        this.stock = stock;
         this.categoryId = categoryId;
     }
 
@@ -104,14 +103,14 @@ public class Product {
         return price;
     }
 
-    public void changePrice(BigDecimal newPrice) {
-        if (newPrice == null || newPrice.signum() <= 0) {
+    public void changePrice(BigDecimal price) {
+        if (price == null || price.signum() <= 0) {
             throw new IllegalArgumentException(
                     "O preço deve ser informado e maior que zero."
             );
         }
 
-        this.price = newPrice;
+        this.price = price;
     }
 
     public boolean isActive() {
@@ -134,18 +133,41 @@ public class Product {
         this.createdAt = createdAt;
     }
 
-    public int getStock() {
-        return stock;
+    public int getAvailableStock() {
+        return availableStock;
     }
 
-    public void updateStock(int name) {
-        if (name < 0) {
-            throw new IllegalArgumentException(
-                    "O estoque não pode ser negativo."
-            );
+    public int getReservedStock() {
+        return reservedStock;
+    }
+
+    public void defineInitialStock(int quantity) {
+
+        validateNonNegativeQuantity(quantity);
+        this.availableStock = quantity;
+        this.reservedStock = 0;
+    }
+    private void validateNonNegativeQuantity(int quantity) {
+        if(quantity < 0) {
+            throw new IllegalArgumentException("O estoque não pode ser negativo.");
         }
 
-        this.stock = name;
+    }
+
+    private void validatePositiveQuantity(int quantity) {
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        }
+    }
+    public void reserveStock(int quantity) {
+
+        validatePositiveQuantity(quantity);
+        if(!hasEnoughStock(quantity)) {
+            throw new IllegalStateException("Estoque insuficiente para realizar a reserva");
+        }
+
+        this.availableStock = availableStock - quantity;
+        this.reservedStock = reservedStock + quantity;
     }
 
     public void defineCategory(UUID categoryId) {
@@ -159,18 +181,17 @@ public class Product {
         return categoryId;
     }
     public boolean isOutOfStock() {
-        return this.stock <= 0;
+        return this.availableStock <= 0;
     }
 
-    public boolean hasEnoughStock(int quantity) {
-        return stock >= quantity;
+    private boolean hasEnoughStock(int quantity) {
+        return quantity > 0 && availableStock >= quantity;
     }
     public boolean isInactive() {
         return !this.isActive();
     }
     public boolean canSell(int quantity) {
-        return isActive() &&
-                !isOutOfStock() && hasEnoughStock(quantity);
+        return isActive() && hasEnoughStock(quantity);
     }
     public static Product create(
             String name,
@@ -185,7 +206,7 @@ public class Product {
         product.rename(name);
         product.changeDescription(description);
         product.changePrice(price);
-        product.updateStock(stock);
+        product.defineInitialStock(stock);
         product.activate();
         product.defineCreatedAt(LocalDateTime.now());
         product.defineCategory(categoryId);

@@ -12,7 +12,9 @@ public record ProductResponse(
         String description,
         BigDecimal price,
         boolean active,
-        int stock,
+        int availableStock,
+
+        int reservedStock,
         LocalDateTime createdAt,
         UUID categoryId
 ) {
@@ -23,7 +25,8 @@ public record ProductResponse(
                 product.getDescription(),
                 product.getPrice(),
                 product.isActive(),
-                product.getStock(),
+                product.getAvailableStock(),
+                product.getReservedStock(),
                 product.getCreatedAt(),
                 product.getCategoryId()
 

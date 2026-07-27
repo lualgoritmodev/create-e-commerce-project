@@ -48,7 +48,7 @@ public record ProductUpdateRequest(
         product.rename(name);
         product.changeDescription(description);
         product.changePrice(price);
-        product.updateStock(stock);
+        product.defineInitialStock(stock);
 
         return product;
     }
