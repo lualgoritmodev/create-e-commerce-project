@@ -1,6 +1,7 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.valueobject.ProductName;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ public record ProductUpdateRequest(
                 max = 100,
                 message = "Product name must have at most 100 characters"
         )
-        String name,
+        ProductName name,
 
         @NotBlank(message = "Product description is required")
         @Size(

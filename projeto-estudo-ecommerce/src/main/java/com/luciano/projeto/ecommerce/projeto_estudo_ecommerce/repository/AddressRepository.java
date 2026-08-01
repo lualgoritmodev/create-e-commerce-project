@@ -1,6 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Address;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.Address;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 

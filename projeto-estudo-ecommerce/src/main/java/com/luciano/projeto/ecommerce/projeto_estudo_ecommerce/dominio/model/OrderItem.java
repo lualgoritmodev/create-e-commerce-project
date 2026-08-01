@@ -1,4 +1,4 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;

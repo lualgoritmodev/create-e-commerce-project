@@ -1,6 +1,6 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.Status;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.utilenum.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

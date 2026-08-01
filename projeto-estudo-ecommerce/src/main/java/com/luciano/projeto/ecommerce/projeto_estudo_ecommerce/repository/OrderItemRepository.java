@@ -1,6 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.OrderItem;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.OrderItem;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 

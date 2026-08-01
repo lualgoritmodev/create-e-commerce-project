@@ -1,6 +1,6 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.OrderStatus;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.utilenum.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;

@@ -5,7 +5,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.req
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.ProductNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {

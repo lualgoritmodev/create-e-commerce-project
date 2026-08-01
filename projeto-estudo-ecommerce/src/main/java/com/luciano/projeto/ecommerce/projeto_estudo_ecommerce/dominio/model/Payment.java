@@ -1,7 +1,7 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.PaymentMethod;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.utilenum.PaymentStatus;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.utilenum.PaymentMethod;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.utilenum.PaymentStatus;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

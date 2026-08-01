@@ -1,6 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.valueobject.ProductName;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,7 +14,7 @@ import java.util.UUID;
 public record ProductRequest(
         @NotBlank
         @Size(max = 100)
-        String name,
+        ProductName name,
         @NotBlank
         @Size(max = 500)
         String description,

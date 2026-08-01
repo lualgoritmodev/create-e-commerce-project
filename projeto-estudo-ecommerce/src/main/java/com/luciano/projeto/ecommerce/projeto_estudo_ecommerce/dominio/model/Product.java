@@ -1,5 +1,6 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.valueobject.ProductName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
@@ -16,9 +17,9 @@ public class Product {
     @Id
     private UUID id;
 
-    @NotBlank
+    @NotNull
     @Column("name")
-    private String name;
+    private ProductName name;
 
     @NotBlank
     @Column("description")
@@ -48,7 +49,7 @@ public class Product {
 
     public Product(
             UUID id,
-            String name,
+            ProductName name,
             String description,
             BigDecimal price,
             boolean active,
@@ -72,12 +73,12 @@ public class Product {
         this.id = id;
     }
 
-    public String getName() {
+    public ProductName getName() {
         return name;
     }
 
-    public void rename(String newName) {
-        if (newName == null || newName.isBlank()) {
+    public void rename(ProductName newName) {
+        if (newName == null) {
             throw new IllegalArgumentException(
                     "O nome do produto não pode estar vazio."
             );
@@ -194,7 +195,7 @@ public class Product {
         return isActive() && hasEnoughStock(quantity);
     }
     public static Product create(
-            String name,
+            ProductName name,
             String description,
             BigDecimal price,
             Integer stock,
