@@ -1,13 +1,13 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.request.ProductUpdateRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.controller.dto.response.ProductResponse;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.CategoryNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.exception.notfoundexception.ProductNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.dominio.model.Product;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.repository.ProductRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.ProductResponse;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.repository.CategoryRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.repository.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
