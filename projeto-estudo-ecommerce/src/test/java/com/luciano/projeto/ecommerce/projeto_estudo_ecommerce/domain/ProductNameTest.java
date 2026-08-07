@@ -7,17 +7,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductNameTest {
     @Test
     void shouldCreateProductNameWhenValueIsValid() {
-        ProductName expect = new ProductName("Notebook Gamer");
+        ProductName expected = new ProductName("Notebook Gamer");
 
-        assertEquals("Notebook Gamer", expect.value());
-        assertNotEquals(" ", expect.value());
+        assertEquals("Notebook Gamer", expected.value());
+        assertNotEquals(" ", expected.value());
 
     }
     @Test
     void shouldNormalizeProductName() {
-        ProductName expect = new ProductName(" Notebook    Gamer ");
+        ProductName expected = new ProductName(" Notebook    Gamer ");
 
-        assertEquals("Notebook Gamer", expect.value());
+        assertEquals("Notebook Gamer", expected.value());
     }
     @Test
     void shouldThrowExceptionWhenValueIsBlank() {
@@ -42,8 +42,8 @@ public class ProductNameTest {
     @Test
     void shouldCreateProductNameWhenValueHasMinimumLength() {
 
-        ProductName expect = new ProductName("TV1");
-        assertEquals("TV1", expect.value());
+        ProductName expected = new ProductName("TV1");
+        assertEquals("TV1", expected.value());
     }
     @Test
     void shouldThrowExceptionWhenValueIsBelowMinimumLength() {
@@ -57,4 +57,20 @@ public class ProductNameTest {
                 exception.getMessage());
     }
 
+    @Test
+    void shouldCreateProductNameWhenValueHasMaximumLength() {
+
+        ProductName expected = new ProductName("A".repeat(100));
+
+        assertEquals(100, expected.value().length());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenValueIsAboveMaximumLength() {
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        () -> new ProductName("A".repeat(101)));
+
+        assertEquals("O nome do produto deve ter entre 3 e 100 caracteres.", exception.getMessage());
+    }
 }
