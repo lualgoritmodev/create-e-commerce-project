@@ -39,5 +39,22 @@ public class ProductNameTest {
        assertEquals("O nome do produto é obrigatório.", exception.getMessage());
 
     }
+    @Test
+    void shouldCreateProductNameWhenValueHasMinimumLength() {
+
+        ProductName expect = new ProductName("TV1");
+        assertEquals("TV1", expect.value());
+    }
+    @Test
+    void shouldThrowExceptionWhenValueIsBelowMinimumLength() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new ProductName("TV")
+        );
+
+        assertEquals("O nome do produto deve ter entre 3 e 100 caracteres.",
+                exception.getMessage());
+    }
 
 }
