@@ -92,4 +92,30 @@ public class ProductNameTest {
         assertEquals("O nome do produto deve conter ao menos uma letra ou número.", exception.getMessage());
     }
 
+    @Test
+    void shouldBeEqualWhenValuesAreEquivalentAfterNormalization() {
+
+        ProductName first = new ProductName("Notebook Gamer");
+        ProductName second = new ProductName(" Notebook   Gamer");
+
+        assertEquals(first, second);
+    }
+
+    @Test
+    void shouldHaveSameHashCodeWhenValuesAreEquivalentAfterNormalization() {
+
+        ProductName first = new ProductName("Notebook Gamer");
+        ProductName second = new ProductName(" Notebook   Gamer");
+
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    void shouldNotBeEqualWhenValuesAreDifferent() {
+        ProductName first = new ProductName("Notebook Gamer");
+        ProductName second = new ProductName(" MOUSE ");
+
+        assertNotEquals(first, second);
+    }
+
 }
