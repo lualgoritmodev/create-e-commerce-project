@@ -1,6 +1,8 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,4 +74,22 @@ public class ProductNameTest {
 
         assertEquals("O nome do produto deve ter entre 3 e 100 caracteres.", exception.getMessage());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "###",
+            "@@@",
+            "!!!",
+            "---"
+    })
+    void shouldThrowExceptionWhenValueContainsOnlySymbols(String value) {
+
+        IllegalArgumentException exception = assertThrows(
+                 IllegalArgumentException.class,
+                () -> new ProductName(value)
+        );
+
+        assertEquals("O nome do produto deve conter ao menos uma letra ou número.", exception.getMessage());
+    }
+
 }
