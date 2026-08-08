@@ -1,5 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ public record ProductRequest(
         @NotNull
         @DecimalMin("0.01")
         @Digits(integer = 8, fraction = 2)
-        BigDecimal price,
+        Money price,
         @NotNull
         @PositiveOrZero
         Integer stock,

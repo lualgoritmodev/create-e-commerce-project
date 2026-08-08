@@ -1,9 +1,8 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,7 +10,7 @@ public record ProductResponse(
         UUID id,
         ProductName name,
         String description,
-        BigDecimal price,
+        Money price,
         boolean active,
         int availableStock,
 

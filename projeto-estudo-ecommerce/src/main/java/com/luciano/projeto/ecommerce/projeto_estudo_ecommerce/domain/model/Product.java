@@ -1,12 +1,13 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.*;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class Product {
 
     @NotNull
     @Column("price")
-    private BigDecimal price;
+    private Money price;
 
     @Column("active")
     private boolean isActive;
@@ -51,7 +52,7 @@ public class Product {
             UUID id,
             ProductName name,
             String description,
-            BigDecimal price,
+            Money price,
             boolean active,
             LocalDateTime createdAt,
             UUID categoryId
@@ -79,9 +80,7 @@ public class Product {
 
     public void rename(ProductName newName) {
         if (newName == null) {
-            throw new IllegalArgumentException(
-                    "O nome do produto não pode estar vazio."
-            );
+            throw new InvalidProductNameException();
         }
 
         this.name = newName;
@@ -93,22 +92,18 @@ public class Product {
 
     public void changeDescription(String description) {
         if (description == null || description.isBlank()) {
-            throw new IllegalArgumentException(
-                    "A descrição do produto não pode estar vazia."
-            );
+            throw new InvalidProductDescriptionException();
         }
 
         this.description = description;
     }
-    public BigDecimal getPrice() {
+    public Money getPrice() {
         return price;
     }
 
-    public void changePrice(BigDecimal price) {
-        if (price == null || price.signum() <= 0) {
-            throw new IllegalArgumentException(
-                    "O preço deve ser informado e maior que zero."
-            );
+    public void changePrice(Money price) {
+        if (price == null || price.value().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidProductPriceException();
         }
 
         this.price = price;
@@ -150,21 +145,22 @@ public class Product {
     }
     private void validateNonNegativeQuantity(int quantity) {
         if(quantity < 0) {
-            throw new IllegalArgumentException("O estoque não pode ser negativo.");
+            throw new InvalidNegativeQuantityException();
         }
 
     }
 
     private void validatePositiveQuantity(int quantity) {
         if(quantity <= 0) {
-            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+            throw new InvalidQuantityException();
         }
     }
+
     public void reserveStock(int quantity) {
 
         validatePositiveQuantity(quantity);
         if(!hasEnoughStock(quantity)) {
-            throw new IllegalStateException("Estoque insuficiente para realizar a reserva");
+            throw new InsufficientStockException();
         }
 
         this.availableStock = availableStock - quantity;
@@ -173,7 +169,7 @@ public class Product {
 
     public void defineCategory(UUID categoryId) {
         if(categoryId == null) {
-            throw new IllegalArgumentException("CategoryId is required");
+            throw new InvalidProductCategoryException();
         }
 
          this.categoryId = categoryId;
@@ -197,7 +193,7 @@ public class Product {
     public static Product create(
             ProductName name,
             String description,
-            BigDecimal price,
+            Money price,
             Integer stock,
             UUID categoryId
 

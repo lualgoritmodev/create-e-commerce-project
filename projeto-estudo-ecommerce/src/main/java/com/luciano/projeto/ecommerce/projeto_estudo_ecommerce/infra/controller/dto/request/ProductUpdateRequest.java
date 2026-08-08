@@ -1,6 +1,7 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -37,7 +38,7 @@ public record ProductUpdateRequest(
                 fraction = 2,
                 message = "Product price must have up to 8 integer digits and 2 decimal places"
         )
-        BigDecimal price,
+        Money price,
 
         @NotNull(message = "Product stock is required")
         @PositiveOrZero(message = "Product stock cannot be negative")
