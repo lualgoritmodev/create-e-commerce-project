@@ -7,17 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductNameTest {
     @Test
     void shouldCreateProductNameWhenValueIsValid() {
-        ProductName expected = new ProductName("Notebook Gamer");
+        ProductName productName = new ProductName("Notebook Gamer");
 
-        assertEquals("Notebook Gamer", expected.value());
-        assertNotEquals(" ", expected.value());
+        assertEquals("Notebook Gamer", productName.value());
 
     }
     @Test
     void shouldNormalizeProductName() {
-        ProductName expected = new ProductName(" Notebook    Gamer ");
+        ProductName productName = new ProductName(" Notebook    Gamer ");
 
-        assertEquals("Notebook Gamer", expected.value());
+        assertEquals("Notebook Gamer", productName.value());
     }
     @Test
     void shouldThrowExceptionWhenValueIsBlank() {
@@ -42,8 +41,8 @@ public class ProductNameTest {
     @Test
     void shouldCreateProductNameWhenValueHasMinimumLength() {
 
-        ProductName expected = new ProductName("TV1");
-        assertEquals("TV1", expected.value());
+        ProductName productName = new ProductName("TV1");
+        assertEquals("TV1", productName.value());
     }
     @Test
     void shouldThrowExceptionWhenValueIsBelowMinimumLength() {
@@ -60,9 +59,9 @@ public class ProductNameTest {
     @Test
     void shouldCreateProductNameWhenValueHasMaximumLength() {
 
-        ProductName expected = new ProductName("A".repeat(100));
+        ProductName productName = new ProductName("A".repeat(100));
 
-        assertEquals(100, expected.value().length());
+        assertEquals(100, productName.value().length());
     }
 
     @Test
