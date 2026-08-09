@@ -1,5 +1,4 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
