@@ -43,7 +43,7 @@ public record Money(BigDecimal value) {
         );
     }
 
-    public static void validateRequiredMoney(BigDecimal value) {
+    private static void validateRequiredMoney(BigDecimal value) {
         if(value == null) {
             throw new InvalidMoneyException();
         }
