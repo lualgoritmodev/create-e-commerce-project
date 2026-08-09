@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -102,7 +101,7 @@ public class Product {
     }
 
     public void changePrice(Money price) {
-        if (price == null || price.value().compareTo(BigDecimal.ZERO) <= 0) {
+        if (price == null || !price.isPositive()) {
             throw new InvalidProductPriceException();
         }
 
