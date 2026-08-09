@@ -12,6 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MoneyTest {
 
     @Test
+    void shouldCreateMoneyWhenValueIsValid() {
+
+        Money money = new Money(new BigDecimal("10.000"));
+
+        assertEquals(new BigDecimal("10.00"), money.value());
+
+    }
+
+    @Test
+    void shouldNormalizeMoneyScale() {
+
+        Money money = new Money(new BigDecimal("10.0"));
+        assertEquals(new BigDecimal("10.00"), money.value());
+    }
+
+    @Test
     void shouldReturnTrueWhenValueIsPositive() {
         Money money = new Money(new BigDecimal("1.0"));
 
@@ -40,7 +56,7 @@ public class MoneyTest {
         assertTrue(result);
     }
     @Test
-    void shouldReturnExceptionWhenValueIsNull() {
+    void shouldThrowExceptionWhenValueIsNull() {
         InvalidMoneyException exception = assertThrows(
                 InvalidMoneyException.class,
                 () -> new Money(null)
@@ -50,13 +66,13 @@ public class MoneyTest {
     }
 
     @Test
-    void shouldReturnExceptionWhenScaleIsMoreTwo() {
+    void shouldThrowExceptionWhenValueRequiresRounding() {
         InvalidMoneyScaleException exception = assertThrows(
                 InvalidMoneyScaleException.class,
                 () -> new Money(new BigDecimal("10.999"))
         );
 
-        assertEquals("O valor monetário deve possuir no máximo duas casas decimais.", exception.getMessage());
+        assertEquals("O valor monetário não pode exigir arredondamento para duas casas decimais.", exception.getMessage());
     }
 
 }
