@@ -96,6 +96,14 @@ class MoneyTest {
     }
 
     @Test
+    void shouldNotBeEqualWhenValuesAreDifferent() {
+        Money first = new Money(new BigDecimal("10.00"));
+        Money second = new Money(new BigDecimal("20.00"));
+
+        assertNotEquals(first, second);
+    }
+
+    @Test
     void shouldReturnTrueWhenValueIsPositive() {
         Money money = new Money(new BigDecimal("1.0"));
 
