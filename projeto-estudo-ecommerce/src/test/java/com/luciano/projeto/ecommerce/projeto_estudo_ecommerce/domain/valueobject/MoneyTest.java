@@ -79,6 +79,23 @@ class MoneyTest {
     }
 
     @Test
+    void shouldBeEqualWhenValuesAreEquivalentAfterNormalization() {
+
+        Money first = new Money(new BigDecimal("10.0"));
+        Money second = new Money(new BigDecimal("10.00"));
+
+        assertEquals(first, second);
+    }
+
+    @Test
+    void shouldHaveSameHashCodeWhenValuesAreEquivalentAfterNormalization() {
+        Money first = new Money(new BigDecimal("10.00"));
+        Money second = new Money(new BigDecimal("10.0"));
+
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
     void shouldReturnTrueWhenValueIsPositive() {
         Money money = new Money(new BigDecimal("1.0"));
 
