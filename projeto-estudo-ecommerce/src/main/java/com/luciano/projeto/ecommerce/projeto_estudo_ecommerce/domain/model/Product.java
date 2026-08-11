@@ -6,6 +6,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
@@ -44,9 +45,10 @@ public class Product {
     @Column("category_id")
     private UUID categoryId;
 
-    public Product() {
+    private Product() {
     }
 
+    @PersistenceCreator
     public Product(
             UUID id,
             ProductName name,
@@ -54,15 +56,18 @@ public class Product {
             Money price,
             boolean active,
             LocalDateTime createdAt,
+            int availableStock,
+            int reservedStock,
             UUID categoryId
     ) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
+        rename(name);
+        changeDescription(description);
+        changePrice(price);
         this.isActive = active;
         this.createdAt = createdAt;
-        this.categoryId = categoryId;
+        restoreStock(availableStock, reservedStock);
+        defineCategory(categoryId);
     }
 
     public UUID getId() {
@@ -142,6 +147,17 @@ public class Product {
         this.availableStock = quantity;
         this.reservedStock = 0;
     }
+
+    private void restoreStock(int availableStock, int reservedStock) {
+
+        validateNonNegativeQuantity(availableStock);
+        validateNonNegativeQuantity(reservedStock);
+
+        this.availableStock = availableStock;
+        this.reservedStock = reservedStock;
+
+    }
+
     private void validateNonNegativeQuantity(int quantity) {
         if(quantity < 0) {
             throw new InvalidNegativeQuantityException();
