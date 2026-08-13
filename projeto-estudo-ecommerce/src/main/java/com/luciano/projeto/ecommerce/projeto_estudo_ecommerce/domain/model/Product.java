@@ -188,7 +188,7 @@ public class Product {
         this.reservedStock = reservedStock + quantity;
     }
 
-    public void defineCategory(UUID categoryId) {
+    private void defineCategory(UUID categoryId) {
         if(categoryId == null) {
             throw new InvalidProductCategoryException();
         }
