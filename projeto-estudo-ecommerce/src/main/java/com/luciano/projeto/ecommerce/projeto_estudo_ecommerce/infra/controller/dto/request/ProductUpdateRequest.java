@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-import java.math.BigDecimal;
-
 public record ProductUpdateRequest(
 
         @NotBlank(message = "Product name is required")
@@ -38,11 +36,7 @@ public record ProductUpdateRequest(
                 fraction = 2,
                 message = "Product price must have up to 8 integer digits and 2 decimal places"
         )
-        Money price,
-
-        @NotNull(message = "Product stock is required")
-        @PositiveOrZero(message = "Product stock cannot be negative")
-        Integer stock
+        Money price
 
 ) {
 
@@ -50,7 +44,6 @@ public record ProductUpdateRequest(
         product.rename(name);
         product.changeDescription(description);
         product.changePrice(price);
-        product.defineInitialStock(stock);
 
         return product;
     }

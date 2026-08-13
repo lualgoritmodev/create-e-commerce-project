@@ -49,7 +49,7 @@ public class Product {
     }
 
     @PersistenceCreator
-    public Product(
+    Product(
             UUID id,
             ProductName name,
             String description,
@@ -74,7 +74,7 @@ public class Product {
         return id;
     }
 
-    public void defineId(UUID id) {
+    private void defineId(UUID id) {
         this.id = id;
     }
 
@@ -129,7 +129,7 @@ public class Product {
         return createdAt;
     }
 
-    public void defineCreatedAt(LocalDateTime createdAt) {
+    private void defineCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -141,7 +141,7 @@ public class Product {
         return reservedStock;
     }
 
-    public void defineInitialStock(int quantity) {
+    private void defineInitialStock(int quantity) {
 
         validateNonNegativeQuantity(quantity);
         this.availableStock = quantity;
@@ -155,6 +155,12 @@ public class Product {
 
         this.availableStock = availableStock;
         this.reservedStock = reservedStock;
+
+    }
+    public void addStock(int quantity) {
+
+        validatePositiveQuantity(quantity);
+        this.availableStock += quantity;
 
     }
 
@@ -205,11 +211,12 @@ public class Product {
     public boolean canSell(int quantity) {
         return isActive() && hasEnoughStock(quantity);
     }
+
     public static Product create(
             ProductName name,
             String description,
             Money price,
-            Integer stock,
+            int stock,
             UUID categoryId
 
     ) {
