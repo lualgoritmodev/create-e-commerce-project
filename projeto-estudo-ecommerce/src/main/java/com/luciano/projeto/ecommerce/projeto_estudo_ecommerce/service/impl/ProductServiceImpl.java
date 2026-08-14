@@ -6,8 +6,8 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.d
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.repository.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.repository.ProductRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.CategoryRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;

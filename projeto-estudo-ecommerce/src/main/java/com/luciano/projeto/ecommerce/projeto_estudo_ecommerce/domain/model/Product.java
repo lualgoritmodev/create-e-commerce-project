@@ -1,136 +1,59 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.*;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InsufficientStockException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidNegativeQuantityException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidProductCategoryException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidProductDescriptionException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidProductNameException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidProductPriceException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidQuantityException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceCreator;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table("tb_product")
 public class Product {
 
-    @Id
     private UUID id;
-
-    @NotNull
-    @Column("name")
     private ProductName name;
-
-    @NotBlank
-    @Column("description")
     private String description;
-
-    @NotNull
-    @Column("price")
     private Money price;
-
-    @Column("active")
     private boolean isActive;
-
-    @NotNull
-    @Column("created_at")
     private LocalDateTime createdAt;
-
-    @Column("available_stock")
     private int availableStock;
-    @Column("reserved_stock")
     private int reservedStock;
-    @NotNull
-    @Column("category_id")
     private UUID categoryId;
 
     private Product() {
     }
 
-    @PersistenceCreator
-    Product(
-            UUID id,
-            ProductName name,
-            String description,
-            Money price,
-            boolean active,
-            LocalDateTime createdAt,
-            int availableStock,
-            int reservedStock,
-            UUID categoryId
-    ) {
-        this.id = id;
-        rename(name);
-        changeDescription(description);
-        changePrice(price);
-        this.isActive = active;
-        this.createdAt = createdAt;
-        restoreStock(availableStock, reservedStock);
-        defineCategory(categoryId);
-    }
+    // =========================
+    // Queries / leitura
+    // =========================
 
     public UUID getId() {
         return id;
-    }
-
-    private void defineId(UUID id) {
-        this.id = id;
     }
 
     public ProductName getName() {
         return name;
     }
 
-    public void rename(ProductName newName) {
-        if (newName == null) {
-            throw new InvalidProductNameException();
-        }
-
-        this.name = newName;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void changeDescription(String description) {
-        if (description == null || description.isBlank()) {
-            throw new InvalidProductDescriptionException();
-        }
-
-        this.description = description;
-    }
     public Money getPrice() {
         return price;
-    }
-
-    public void changePrice(Money price) {
-        if (price == null || !price.isPositive()) {
-            throw new InvalidProductPriceException();
-        }
-
-        this.price = price;
     }
 
     public boolean isActive() {
         return isActive;
     }
 
-    public void activate() {
-        this.isActive = true;
-    }
-
-    public void deactivate() {
-        this.isActive = false;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    private void defineCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public int getAvailableStock() {
@@ -141,93 +64,181 @@ public class Product {
         return reservedStock;
     }
 
-    private void defineInitialStock(int quantity) {
+    public UUID getCategoryId() {
+        return categoryId;
+    }
 
+    public boolean isInactive() {
+        return !isActive;
+    }
+
+    public boolean isOutOfStock() {
+        return availableStock == 0;
+    }
+
+    public boolean canSell(int quantity) {
+        return isActive && hasEnoughStock(quantity);
+    }
+
+    // =========================
+    // Comportamentos públicos
+    // =========================
+
+    public void rename(ProductName newName) {
+        if (newName == null) {
+            throw new InvalidProductNameException();
+        }
+
+        this.name = newName;
+    }
+
+    public void changeDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw new InvalidProductDescriptionException();
+        }
+
+        this.description = description;
+    }
+
+    public void changePrice(Money price) {
+        if (price == null || !price.isPositive()) {
+            throw new InvalidProductPriceException();
+        }
+
+        this.price = price;
+    }
+
+    public void activate() {
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    public void addStock(int quantity) {
+        validatePositiveQuantity(quantity);
+
+        this.availableStock += quantity;
+    }
+
+    public void reserveStock(int quantity) {
+        validatePositiveQuantity(quantity);
+
+        if (!hasEnoughStock(quantity)) {
+            throw new InsufficientStockException();
+        }
+
+        this.availableStock -= quantity;
+        this.reservedStock += quantity;
+    }
+
+    // =========================
+    // Regras internas
+    // =========================
+
+    private boolean hasEnoughStock(int quantity) {
+        return quantity > 0 && availableStock >= quantity;
+    }
+
+    private void validateNonNegativeQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new InvalidNegativeQuantityException();
+        }
+    }
+
+    private void validatePositiveQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidQuantityException();
+        }
+    }
+
+    // =========================
+    // Estado de criação
+    // =========================
+
+    private void defineInitialStock(int quantity) {
         validateNonNegativeQuantity(quantity);
+
         this.availableStock = quantity;
         this.reservedStock = 0;
     }
 
-    private void restoreStock(int availableStock, int reservedStock) {
+    private void defineCategory(UUID categoryId) {
+        if (categoryId == null) {
+            throw new InvalidProductCategoryException();
+        }
 
+        this.categoryId = categoryId;
+    }
+
+    // =========================
+    // Estado de reidratação
+    // =========================
+
+    private void restoreStock(
+            int availableStock,
+            int reservedStock
+    ) {
         validateNonNegativeQuantity(availableStock);
         validateNonNegativeQuantity(reservedStock);
 
         this.availableStock = availableStock;
         this.reservedStock = reservedStock;
-
-    }
-    public void addStock(int quantity) {
-
-        validatePositiveQuantity(quantity);
-        this.availableStock += quantity;
-
     }
 
-    private void validateNonNegativeQuantity(int quantity) {
-        if(quantity < 0) {
-            throw new InvalidNegativeQuantityException();
-        }
-
-    }
-
-    private void validatePositiveQuantity(int quantity) {
-        if(quantity <= 0) {
-            throw new InvalidQuantityException();
-        }
-    }
-
-    public void reserveStock(int quantity) {
-
-        validatePositiveQuantity(quantity);
-        if(!hasEnoughStock(quantity)) {
-            throw new InsufficientStockException();
-        }
-
-        this.availableStock = availableStock - quantity;
-        this.reservedStock = reservedStock + quantity;
-    }
-
-    private void defineCategory(UUID categoryId) {
-        if(categoryId == null) {
-            throw new InvalidProductCategoryException();
-        }
-
-         this.categoryId = categoryId;
-    }
-    public UUID getCategoryId() {
-        return categoryId;
-    }
-    public boolean isOutOfStock() {
-        return this.availableStock <= 0;
-    }
-
-    private boolean hasEnoughStock(int quantity) {
-        return quantity > 0 && availableStock >= quantity;
-    }
-    public boolean isInactive() {
-        return !this.isActive();
-    }
-    public boolean canSell(int quantity) {
-        return isActive() && hasEnoughStock(quantity);
-    }
+    // =========================
+    // Factory - novo Product
+    // =========================
 
     public static Product create(
             ProductName name,
             String description,
             Money price,
-            int stock,
+            int initialStock,
             UUID categoryId
-
     ) {
-        Product product =  new Product();
-        product.defineId(UUID.randomUUID());
+        Product product = new Product();
+
+        product.id = UUID.randomUUID();
         product.rename(name);
         product.changeDescription(description);
         product.changePrice(price);
-        product.defineInitialStock(stock);
+        product.defineInitialStock(initialStock);
         product.activate();
-        product.defineCreatedAt(LocalDateTime.now());
+        product.createdAt = LocalDateTime.now();
+        product.defineCategory(categoryId);
+
+        return product;
+    }
+
+    // =========================
+    // Factory - reidratação
+    // =========================
+
+    public static Product rehydrate(
+            UUID id,
+            ProductName name,
+            String description,
+            Money price,
+            boolean active,
+            LocalDateTime createdAt,
+            int availableStock,
+            int reservedStock,
+            UUID categoryId
+    ) {
+        Product product = new Product();
+
+        product.id = id;
+        product.rename(name);
+        product.changeDescription(description);
+        product.changePrice(price);
+        product.isActive = active;
+        product.createdAt = createdAt;
+        product.restoreStock(
+                availableStock,
+                reservedStock
+        );
         product.defineCategory(categoryId);
 
         return product;
