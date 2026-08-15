@@ -7,7 +7,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.
 
 public class ProductPersistenceMapper {
 
-    public ProductEntity toEntity(Product product) {
+    public static ProductEntity toEntity(Product product) {
         return new ProductEntity(
                 product.getId(),
                 product.getName().value(),
