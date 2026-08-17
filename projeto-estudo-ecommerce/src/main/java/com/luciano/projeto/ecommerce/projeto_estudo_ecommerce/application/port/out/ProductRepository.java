@@ -6,13 +6,12 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface ProducRepository {
+public interface ProductRepository {
 
     Mono<Product> save(Product product);
 
-    Mono<Product> findByid(UUID productId);
+    Mono<Product> findById(UUID productId);
 
     Flux<Product> findByCategoryId(UUID categoryid);
 
-    Flux<Product> getAllProduct();
 }

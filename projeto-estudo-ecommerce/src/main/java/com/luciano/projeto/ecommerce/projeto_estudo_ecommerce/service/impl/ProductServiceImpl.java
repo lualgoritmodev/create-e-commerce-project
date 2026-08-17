@@ -7,7 +7,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.pr
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.ProductRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.SpringDataProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,11 @@ import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository productRepository;
+    private final SpringDataProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final R2dbcEntityTemplate entityTemplate;
     ProductServiceImpl(
-        ProductRepository productRepository,
+        SpringDataProductRepository productRepository,
         CategoryRepository categoryRepository,
         R2dbcEntityTemplate r2dbcEntityTemplate
     ){
