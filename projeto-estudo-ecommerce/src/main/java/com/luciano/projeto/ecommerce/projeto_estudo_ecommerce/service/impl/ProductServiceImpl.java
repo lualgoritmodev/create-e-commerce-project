@@ -17,9 +17,11 @@ import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     private final SpringDataProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final R2dbcEntityTemplate entityTemplate;
+
     ProductServiceImpl(
         SpringDataProductRepository productRepository,
         CategoryRepository categoryRepository,
