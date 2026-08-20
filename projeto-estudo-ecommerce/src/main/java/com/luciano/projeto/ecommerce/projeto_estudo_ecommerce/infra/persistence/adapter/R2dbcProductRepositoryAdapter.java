@@ -45,4 +45,9 @@ public class R2dbcProductRepositoryAdapter implements ProductRepository {
                 .map(ProductPersistenceMapper::toDomain);
     }
 
+    @Override
+    public Flux<Product> findAll() {
+        return repository.findAll().map(ProductPersistenceMapper::toDomain);
+    }
+
 }

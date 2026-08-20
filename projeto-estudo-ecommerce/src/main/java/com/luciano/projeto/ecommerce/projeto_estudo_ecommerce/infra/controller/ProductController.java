@@ -3,7 +3,7 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.ProductResponse;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

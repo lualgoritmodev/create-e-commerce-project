@@ -12,6 +12,8 @@ public interface ProductRepository {
 
     Mono<Product> findById(UUID productId);
 
-    Flux<Product> findByCategoryId(UUID categoryid);
+    Flux<Product> findByCategoryId(UUID categoryId);
+
+    Flux<Product> findAll();
 
 }

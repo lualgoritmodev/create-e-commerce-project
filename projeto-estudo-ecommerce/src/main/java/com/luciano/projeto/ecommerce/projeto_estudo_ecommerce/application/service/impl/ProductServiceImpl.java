@@ -1,5 +1,6 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.impl;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.ProductResponse;
@@ -7,9 +8,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.pr
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.SpringDataProductRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service.ProductService;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.ProductService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,18 +17,15 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final SpringDataProductRepository productRepository;
+    private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final R2dbcEntityTemplate entityTemplate;
 
     ProductServiceImpl(
-        SpringDataProductRepository productRepository,
-        CategoryRepository categoryRepository,
-        R2dbcEntityTemplate r2dbcEntityTemplate
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
     ){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.entityTemplate = r2dbcEntityTemplate;
     }
     @Override
     public Mono<ProductResponse> createProduct(ProductRequest request) {
@@ -44,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
                                 request.stock(),
                                 request.categoryId()
                         );
-                        return entityTemplate.insert(product);
+                        return productRepository.save(product);
 
                  }).map(ProductResponse::from);
     }
@@ -70,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
                 .switchIfEmpty(Mono.error(() -> new ProductNotFoundException(productId))
                 )
                 .map(request::updateEntity)
-                .flatMap(entityTemplate::update)
+                .flatMap(productRepository::save)
                 .map(ProductResponse::from);
     }
 
@@ -80,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> {
                     product.deactivate();
                     return product; })
-                .flatMap(entityTemplate::update)
+                .flatMap(productRepository::save)
                 .then();
     }
 

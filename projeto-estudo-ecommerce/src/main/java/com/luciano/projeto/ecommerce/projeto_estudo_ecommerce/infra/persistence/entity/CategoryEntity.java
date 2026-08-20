@@ -1,16 +1,26 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 import java.util.UUID;
 
-public class Category {
+@Table("tb_category")
+public class CategoryEntity {
 
+    @Id
     private UUID id;
-
-
+    @NotBlank
+    @Column("name")
     private String name;
+    @NotNull
+    @Column("active")
     private Boolean active = true;
 
     public Category() {}
+
     public Category(UUID id, String name,
                     Boolean active) {
         this.id = id;
@@ -39,3 +49,4 @@ public class Category {
     }
 
 }
+

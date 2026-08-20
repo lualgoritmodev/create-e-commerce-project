@@ -1,4 +1,4 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.service;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
