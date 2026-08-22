@@ -1,25 +1,40 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.entity;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidNameOfCustomer;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.utilenum.Status;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CustomerName;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Table("tb_customer")
 public class Customer {
-
+    @Id
     private UUID id;
-    private CustomerName name;
+    @NotBlank
+    private String name;
+    @CPF
+    @NotBlank
     private String cpf;
+    @Email
+    @NotBlank
     private String email;
+    @NotNull
+    @Column("birth_date")
     private LocalDate birthDate;
+    @Column("status")
     private Status status = Status.INACTIVE;
-    private boolean active;
+    @Column("active")
+    @NotNull
+    private Boolean active;
 
-    private Customer() {}
-
-    public Customer(UUID id, CustomerName name, String cpf,
+    public Customer() {}
+    public Customer(UUID id, String name, String cpf,
                     String email, LocalDate birthDate,
                     Status status, Boolean active) {
         this.id = id;
@@ -35,14 +50,11 @@ public class Customer {
         return id;
     }
 
-    public CustomerName getName() {
+    public String getName() {
         return name;
     }
 
-    public void rename(CustomerName name) {
-        if(name == null) {
-            throw new InvalidNameOfCustomer();
-        }
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -86,3 +98,4 @@ public class Customer {
     }
 
 }
+

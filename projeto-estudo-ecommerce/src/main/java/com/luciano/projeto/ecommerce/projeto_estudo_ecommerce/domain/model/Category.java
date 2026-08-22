@@ -1,5 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidCategoryIdException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidCategoryNameException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
 
@@ -34,9 +35,7 @@ public class Category {
     }
 
     public static Category create(CategoryName name) {
-
         Category category = new Category();
-
         category.id = UUID.randomUUID();
         category.rename(name);
         category.enabled = true;
@@ -45,12 +44,19 @@ public class Category {
     }
 
     public static Category rehydrate(UUID id, CategoryName name, boolean enabled) {
+        valideCategory(id);
         Category category = new Category();
         category.id = id;
         category.rename(name);
         category.enabled = enabled;
 
         return category;
+    }
+
+    private static void valideCategory(UUID id) {
+        if(id == null) {
+            throw new InvalidCategoryIdException();
+        }
     }
 
 }

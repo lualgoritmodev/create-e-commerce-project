@@ -1,8 +1,7 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.entity;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import java.util.UUID;
@@ -12,16 +11,19 @@ public class CategoryEntity {
 
     @Id
     private UUID id;
-    @NotBlank
+
     @Column("name")
     private String name;
-    @NotNull
+
     @Column("active")
-    private Boolean active = true;
+    private boolean active;
 
-    public CategoryEntity() {}
-
-    public CategoryEntity(UUID id, String name, Boolean active) {
+    @PersistenceCreator
+    public CategoryEntity(
+            UUID id,
+            String name,
+            boolean active
+    ) {
         this.id = id;
         this.name = name;
         this.active = active;
@@ -35,16 +37,7 @@ public class CategoryEntity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Boolean getActive() {
+    public boolean isActive() {
         return active;
     }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
 }
