@@ -19,10 +19,9 @@ public class CategoryEntity {
     @Column("active")
     private Boolean active = true;
 
-    public Category() {}
+    public CategoryEntity() {}
 
-    public Category(UUID id, String name,
-                    Boolean active) {
+    public CategoryEntity(UUID id, String name, Boolean active) {
         this.id = id;
         this.name = name;
         this.active = active;
@@ -49,4 +48,3 @@ public class CategoryEntity {
     }
 
 }
-

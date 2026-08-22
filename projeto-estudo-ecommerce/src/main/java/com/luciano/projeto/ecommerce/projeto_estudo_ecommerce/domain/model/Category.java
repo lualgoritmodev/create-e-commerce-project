@@ -1,41 +1,56 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidCategoryNameException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
+
 import java.util.UUID;
 
 public class Category {
 
     private UUID id;
+    private CategoryName name;
+    private boolean enabled;
 
-
-    private String name;
-    private Boolean active = true;
-
-    public Category() {}
-    public Category(UUID id, String name,
-                    Boolean active) {
-        this.id = id;
-        this.name = name;
-        this.active = active;
-    }
+    private Category() {}
 
     public UUID getId() {
         return id;
     }
 
-    public String getName() {
+    public CategoryName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public boolean isEnabled() { return enabled; }
+
+    public void disable() { this.enabled = false; }
+
+    public void rename(CategoryName name) {
+        if(name == null) {
+            throw new InvalidCategoryNameException();
+        }
+
         this.name = name;
     }
 
-    public Boolean getActive() {
-        return active;
+    public static Category create(CategoryName name) {
+
+        Category category = new Category();
+
+        category.id = UUID.randomUUID();
+        category.rename(name);
+        category.enabled = true;
+
+        return category;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public static Category rehydrate(UUID id, CategoryName name, boolean enabled) {
+        Category category = new Category();
+        category.id = id;
+        category.rename(name);
+        category.enabled = enabled;
+
+        return category;
     }
 
 }
