@@ -44,7 +44,8 @@ public class Category {
     }
 
     public static Category rehydrate(UUID id, CategoryName name, boolean enabled) {
-        valideCategory(id);
+        validateIdForRehydration(id);
+
         Category category = new Category();
         category.id = id;
         category.rename(name);
@@ -53,7 +54,7 @@ public class Category {
         return category;
     }
 
-    private static void valideCategory(UUID id) {
+    private static void validateIdForRehydration(UUID id) {
         if(id == null) {
             throw new InvalidCategoryIdException();
         }

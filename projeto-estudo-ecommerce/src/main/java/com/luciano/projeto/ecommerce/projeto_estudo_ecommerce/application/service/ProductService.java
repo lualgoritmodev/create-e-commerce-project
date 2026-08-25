@@ -12,7 +12,6 @@ public interface ProductService {
     Mono<ProductResponse> createProduct(ProductRequest productRequest);
     Mono<ProductResponse> getProductById(UUID uuid);
     Flux<ProductResponse> getAllProducts();
-
     Mono<ProductResponse> updateProduct(UUID productId, ProductUpdateRequest productUpdateRequest);
     Mono<Void> deleteProductById(UUID productId);
 }

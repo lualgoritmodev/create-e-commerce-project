@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface SpringDataProductRepository
         extends ReactiveCrudRepository<ProductEntity, UUID> {
     Flux<ProductEntity> findByCategoryId(UUID categoryId);
+
 }

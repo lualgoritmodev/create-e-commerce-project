@@ -1,26 +1,26 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.ProductRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.CategoryRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.ProductService;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
-@Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    ProductServiceImpl(
+   public ProductServiceImpl(
             ProductRepository productRepository,
             CategoryRepository categoryRepository
     ){
@@ -34,9 +34,9 @@ public class ProductServiceImpl implements ProductService {
                          () -> new CategoryNotFoundException(request.categoryId()))
                  ).flatMap(category -> {
                         Product product = Product.create(
-                                request.name(),
+                                new ProductName(request.name()),
                                 request.description(),
-                                request.price(),
+                                new Money(request.price()),
                                 request.stock(),
                                 request.categoryId()
                         );

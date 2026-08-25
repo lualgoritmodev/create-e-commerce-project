@@ -15,14 +15,14 @@ import java.util.UUID;
 public record ProductRequest(
         @NotBlank
         @Size(max = 100)
-        ProductName name,
+        String name,
         @NotBlank
         @Size(max = 500)
         String description,
         @NotNull
         @DecimalMin("0.01")
         @Digits(integer = 8, fraction = 2)
-        Money price,
+        BigDecimal price,
         @NotNull
         @PositiveOrZero
         Integer stock,

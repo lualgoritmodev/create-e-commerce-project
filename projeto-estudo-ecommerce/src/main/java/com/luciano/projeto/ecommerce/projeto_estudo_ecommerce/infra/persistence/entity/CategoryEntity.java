@@ -1,5 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.entity;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.relational.core.mapping.Column;
