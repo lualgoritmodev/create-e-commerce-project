@@ -19,7 +19,7 @@ public class CategoryPersistenceMapper {
          return Category.rehydrate(
                  categoryEntity.getId(),
                  new CategoryName(categoryEntity.getName()),
-                 categoryEntity.isActive()
+                 categoryEntity.isEnabled()
          );
 
     }

@@ -10,6 +10,7 @@ public interface CategoryRepository {
     Mono<Boolean> existsByName(CategoryName categoryName);
     Mono<Category> save(Category category);
     Mono<Category> findById(UUID id);
-    Flux<Category> findAll();
+    Flux<Category> findAllEnabled();
+    Flux<Category> findAllIncludingDisabled();
 
 }

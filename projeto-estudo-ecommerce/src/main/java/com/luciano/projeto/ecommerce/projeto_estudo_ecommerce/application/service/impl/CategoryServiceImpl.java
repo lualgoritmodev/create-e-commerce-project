@@ -44,8 +44,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Flux<CategoryResponse> findAll() {
-        return repository.findAll().map(CategoryResponse::from);
+    public Flux<CategoryResponse> findAllIncludingDisabled() {
+        return repository.findAllIncludingDisabled()
+                .filter(Category::isEnabled)
+                .map(CategoryResponse::from);
     }
 
     @Override
@@ -65,6 +67,20 @@ public class CategoryServiceImpl implements CategoryService {
 
                 }).map(RenameCategory::from);
 
+    }
+
+    @Override
+    public Mono<Void> disableCategory(UUID id) {
+         return repository.findById(id).switchIfEmpty(
+                Mono.error(new CategoryNotFoundException(id))
+        ).flatMap(category -> {category.disable();
+            return repository.save(category);
+         }).then();
+    }
+
+    @Override
+    public Flux<CategoryResponse> findAllEnabled() {
+        return repository.findAllEnabled().map(CategoryResponse::from);
     }
 
     private Mono<Category> renameAndSave(Category category, CategoryName newName) {
