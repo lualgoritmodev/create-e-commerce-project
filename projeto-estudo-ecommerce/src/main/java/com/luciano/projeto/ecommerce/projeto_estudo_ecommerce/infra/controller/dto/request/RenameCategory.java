@@ -2,7 +2,6 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import jakarta.validation.constraints.NotBlank;
-
 import java.util.UUID;
 
 public record RenameCategory(

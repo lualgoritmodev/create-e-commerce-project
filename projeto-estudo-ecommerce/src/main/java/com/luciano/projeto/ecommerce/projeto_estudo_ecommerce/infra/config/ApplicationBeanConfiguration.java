@@ -7,8 +7,9 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.servic
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.CategoryServiceImpl;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.ProductServiceImpl;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 public class ApplicationBeanConfiguration {
 
     @Bean

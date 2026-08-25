@@ -11,6 +11,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.d
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.UUID;
 
 public class CategoryServiceImpl implements CategoryService {
@@ -27,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         return repository.existsByName(categoryName)
                 .flatMap(exists -> {
-                    if(exists) {
+                    if (exists) {
                         return Mono.error(new CategoryNameAlreadyExistsException());
                     }
                     Category category = Category.create(categoryName);
@@ -37,7 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<CategoryResponse> findById(UUID id) {
-        return repository.findById(id).map(CategoryResponse::from);
+        return repository.findById(id).switchIfEmpty(
+                Mono.error(new CategoryNotFoundException(id))
+        ).map(CategoryResponse::from);
     }
 
     @Override
@@ -50,10 +53,22 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CategoryNotFoundException(id)))
                 .flatMap(category -> {
-                    CategoryName categoryName = new CategoryName(request.name());
-                    category.rename(categoryName);
+                    CategoryName newName = new CategoryName(request.name());
+                        if(category.getName().equals(newName)) {
+                            return Mono.just(category);
+                        }
+                    return repository.existsByName(newName).flatMap(exists ->
+                                exists ?
+                                        Mono.error(new CategoryNameAlreadyExistsException()
+                                        ):renameAndSave(category, newName));
+
+
                 }).map(RenameCategory::from);
 
     }
 
+    private Mono<Category> renameAndSave(Category category, CategoryName newName) {
+        category.rename(newName);
+        return repository.save(category);
+    }
 }
