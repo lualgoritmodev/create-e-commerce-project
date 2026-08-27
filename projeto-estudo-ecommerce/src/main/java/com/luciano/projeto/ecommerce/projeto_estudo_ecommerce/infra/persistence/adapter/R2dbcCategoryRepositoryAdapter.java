@@ -43,12 +43,17 @@ public class R2dbcCategoryRepositoryAdapter implements CategoryRepository {
 
     @Override
     public Flux<Category> findAllEnabled() {
-        return repository.findByEnabled().map(CategoryPersistenceMapper::toDomain);
+         return repository.findByEnabledTrue().map(CategoryPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public Flux<Category> findAllDisabled() {
+        return repository.findByEnabledFalse().map(CategoryPersistenceMapper::toDomain);
     }
 
     @Override
     public Flux<Category> findAllIncludingDisabled() {
-        return repository.findAll().map(CategoryPersistenceMapper::toDomain);
+        return null;
     }
 
 }

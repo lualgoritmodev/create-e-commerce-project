@@ -7,10 +7,16 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface CategoryRepository {
-    Mono<Boolean> existsByName(CategoryName categoryName);
-    Mono<Category> save(Category category);
-    Mono<Category> findById(UUID id);
-    Flux<Category> findAllEnabled();
-    Flux<Category> findAllIncludingDisabled();
 
+    Mono<Boolean> existsByName(CategoryName categoryName);
+
+    Mono<Category> save(Category category);
+
+    Mono<Category> findById(UUID id);
+
+    Flux<Category> findAllEnabled();
+
+    Flux<Category> findAllDisabled();
+
+    Flux<Category> findAllIncludingDisabled();
 }

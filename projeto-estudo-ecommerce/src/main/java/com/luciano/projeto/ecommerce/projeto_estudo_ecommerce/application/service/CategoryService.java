@@ -12,8 +12,9 @@ public interface CategoryService {
 
     Mono<CategoryResponse> createCategory(CategoryRequest categoryRequest);
     Mono<CategoryResponse> findById(UUID id);
-    Flux<CategoryResponse> findAllIncludingDisabled();
-    Mono<RenameCategory> renameCategory(UUID id, RenameCategory request);
-    Mono<Void> disableCategory(UUID id);
+    Flux<CategoryResponse> findAllDisabled();
     Flux<CategoryResponse> findAllEnabled();
+    Mono<RenameCategory> renameCategory(UUID id, RenameCategory request);
+    Mono<Void> enableCategory(UUID id);
+    Mono<Void> disableCategory(UUID id);
 }

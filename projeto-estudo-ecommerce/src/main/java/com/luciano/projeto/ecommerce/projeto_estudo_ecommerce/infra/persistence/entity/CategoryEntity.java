@@ -15,7 +15,7 @@ public class CategoryEntity {
     @Column("name")
     private String name;
 
-    @Column("active")
+    @Column("enabled")
     private boolean enabled;
 
     @PersistenceCreator
