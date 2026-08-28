@@ -18,5 +18,5 @@ public interface CategoryRepository {
 
     Flux<Category> findAllDisabled();
 
-    Flux<Category> findAllIncludingDisabled();
+    Flux<Category> findAllCategories();
 }

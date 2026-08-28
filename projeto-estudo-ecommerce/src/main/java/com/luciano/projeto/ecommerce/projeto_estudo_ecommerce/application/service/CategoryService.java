@@ -17,4 +17,5 @@ public interface CategoryService {
     Mono<RenameCategory> renameCategory(UUID id, RenameCategory request);
     Mono<Void> enableCategory(UUID id);
     Mono<Void> disableCategory(UUID id);
+    Flux<CategoryResponse> findAllCategories();
 }

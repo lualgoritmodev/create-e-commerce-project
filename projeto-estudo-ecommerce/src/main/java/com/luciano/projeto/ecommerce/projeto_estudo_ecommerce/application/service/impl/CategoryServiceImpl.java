@@ -81,6 +81,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Flux<CategoryResponse> findAllCategories() {
+        return repository.findAllCategories().map(CategoryResponse::from);
+    }
+
+    @Override
     public Flux<CategoryResponse> findAllDisabled() {
         return repository.findAllDisabled().map(CategoryResponse::from);
     }

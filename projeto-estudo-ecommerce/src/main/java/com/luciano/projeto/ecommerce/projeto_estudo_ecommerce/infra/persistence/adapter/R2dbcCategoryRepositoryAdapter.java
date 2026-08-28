@@ -1,15 +1,19 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.adapter;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.entity.CategoryEntity;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.mapper.CategoryPersistenceMapper;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.persistence.repository.SpringDataCategoryRepository;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.naming.NameAlreadyBoundException;
 import java.util.UUID;
 
 @Repository
@@ -26,14 +30,16 @@ public class R2dbcCategoryRepositoryAdapter implements CategoryRepository {
 
     @Override
     public Mono<Boolean> existsByName(CategoryName categoryName) {
-        return repository.existsByName(categoryName.value());
+        return repository.existsByNameIgnoreCase(categoryName.value());
     }
 
     @Override
     public Mono<Category> save(Category category) {
         CategoryEntity categoryEntity = CategoryPersistenceMapper.toEntity(category);
         return r2dbcEntityTemplate.upsert(categoryEntity)
-                .map(CategoryPersistenceMapper::toDomain);
+                .map(CategoryPersistenceMapper::toDomain)
+                .onErrorMap(DuplicateKeyException.class,
+                        error -> new CategoryNameAlreadyExistsException());
     }
 
     @Override
@@ -52,8 +58,8 @@ public class R2dbcCategoryRepositoryAdapter implements CategoryRepository {
     }
 
     @Override
-    public Flux<Category> findAllIncludingDisabled() {
-        return null;
+    public Flux<Category> findAllCategories() {
+        return repository.findAll().map(CategoryPersistenceMapper::toDomain);
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface SpringDataCategoryRepository extends
         ReactiveCrudRepository<CategoryEntity, UUID> {
-    Mono<Boolean> existsByName(String name);
+    Mono<Boolean> existsByNameIgnoreCase(String name);
     Flux<CategoryEntity> findByEnabledTrue();
     Flux<CategoryEntity> findByEnabledFalse();
 }
