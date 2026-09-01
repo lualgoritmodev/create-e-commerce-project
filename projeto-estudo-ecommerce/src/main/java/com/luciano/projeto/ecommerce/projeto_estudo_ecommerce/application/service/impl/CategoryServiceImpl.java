@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
                         if(category.getName().equals(newName)) {
                             return Mono.just(category);
                         }
-                    return repository.existsByName(newName).flatMap(exists ->
+                    return repository.existsByNameAndIdNot(newName, id).flatMap(exists ->
                                 exists ?
                                         Mono.error(new CategoryNameAlreadyExistsException()
                                         ):renameAndSave(category, newName));

@@ -19,4 +19,7 @@ public interface CategoryRepository {
     Flux<Category> findAllDisabled();
 
     Flux<Category> findAllCategories();
+
+    Mono<Boolean>existsByNameAndIdNot(CategoryName categoryName, UUID id);
+
 }
