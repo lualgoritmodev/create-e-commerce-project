@@ -22,7 +22,7 @@ public class Payment {
     @Column("payment_status")
     private PaymentStatus status;
 
-    @Column("active")
+    @Column("isEnabled")
     @NotNull
     private Boolean active;
     @NotNull

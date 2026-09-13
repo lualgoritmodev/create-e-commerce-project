@@ -29,7 +29,7 @@ public class Customer {
     private LocalDate birthDate;
     @Column("status")
     private Status status = Status.INACTIVE;
-    @Column("active")
+    @Column("isEnabled")
     @NotNull
     private Boolean active;
 

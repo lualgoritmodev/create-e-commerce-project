@@ -23,7 +23,7 @@ public class Order {
     @Column("order_status")
     private OrderStatus status;
 
-    @Column("active")
+    @Column("isEnabled")
     @NotNull
     private Boolean active;
     @NotNull

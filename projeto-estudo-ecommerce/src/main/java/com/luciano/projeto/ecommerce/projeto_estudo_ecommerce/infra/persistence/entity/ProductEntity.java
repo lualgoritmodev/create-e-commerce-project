@@ -23,7 +23,7 @@ public class ProductEntity {
     @Column("price")
     private BigDecimal price;
 
-    @Column("active")
+    @Column("isEnabled")
     private boolean active;
 
     @Column("created_at")
