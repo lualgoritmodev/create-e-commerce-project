@@ -12,13 +12,16 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.pr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.eq;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import java.util.UUID;
@@ -159,5 +162,87 @@ public class CategoryServiceImplTest {
                 .expectError(CategoryNotFoundException.class).verify();
     }
 
+    @Test
+    void shouldThrowExceptionWhenRenamingToExistingCategoryName() {
+        UUID id = UUID.randomUUID();
+        RenameCategory renameCategory = new RenameCategory(id, "Jogos");
+        Category category = Category.rehydrate(id, new CategoryName("Gamer"), true);
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
+        when(categoryRepository.existsByNameAndIdNot(new CategoryName("Jogos"), id))
+                .thenReturn(Mono.just(true));
+
+        Mono<RenameCategory> response = categoryServiceImpl.renameCategory(id,
+                renameCategory);
+
+        StepVerifier.create(response)
+                .expectError(CategoryNameAlreadyExistsException.class)
+                .verify();
+
+        verify(categoryRepository, never()).save(any(Category.class));
+
+    }
+
+    @Test
+    void shouldReturnCategoryWithoutSavingWhenNameIsUnchanged() {
+        UUID id = UUID.randomUUID();
+        Category category = Category.rehydrate(id, new CategoryName("Jogos"), true);
+        RenameCategory renameCategory = new RenameCategory(id, "Jogos");
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
+
+        Mono<RenameCategory> response = categoryServiceImpl.renameCategory(id,
+                renameCategory);
+
+        StepVerifier.create(response).assertNext(res -> {
+            assertEquals(category.getName().value(), res.name());
+            assertEquals(category.getId(), res.id());
+        }).verifyComplete();
+
+        verify(categoryRepository, times(1)).findById(any());
+        verify(categoryRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldEnableCategoryWhenDisabled() {
+        UUID id = UUID.randomUUID();
+        Category category = Category.rehydrate(id, new CategoryName("Jogos"), false);
+        ArgumentCaptor<Category> captor = ArgumentCaptor.forClass(Category.class);
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
+        when(categoryRepository.save(any())).thenReturn(Mono.just(category));
+
+        Mono<Void> response = categoryServiceImpl.enableCategory(id);
+
+        StepVerifier.create(response).verifyComplete();
+
+        verify(categoryRepository).findById(id);
+        verify(categoryRepository).save(captor.capture());
+
+        Category saveCategory = captor.getValue();
+        assertTrue(saveCategory.isEnabled());
+    }
+
+    @Test
+    void shouldDisableCategoryWhenEnabled() {
+
+        UUID id = UUID.randomUUID();
+        Category category = Category.rehydrate(id, new CategoryName("Jogos"), true);
+        ArgumentCaptor<Category> captor = ArgumentCaptor.forClass(Category.class);
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
+        when(categoryRepository.save(any())).thenReturn(Mono.just(category));
+
+        Mono<Void> response = categoryServiceImpl.disableCategory(category.getId());
+
+        StepVerifier.create(response).verifyComplete();
+
+        verify(categoryRepository).findById(id);
+        verify(categoryRepository).save(captor.capture());
+
+        Category saveCategory = captor.getValue();
+        assertFalse(saveCategory.isEnabled());
+
+    }
 
 }
