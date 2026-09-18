@@ -22,6 +22,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.eq;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import java.util.UUID;
@@ -163,6 +165,37 @@ public class CategoryServiceImplTest {
     }
 
     @Test
+    void shouldThrowCategoryNotFoundExceptionWhenEnablingNonExistingCategory() {
+        UUID id = UUID.randomUUID();
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.empty());
+
+        Mono<Void> response = categoryServiceImpl.enableCategory(id);
+
+        StepVerifier.create(response).expectError(CategoryNotFoundException.class).verify();
+
+        verify(categoryRepository).findById(any());
+        verify(categoryRepository, never()).save(any(Category.class));
+
+    }
+
+    @Test
+    void shouldThrowCategoryNotFoundExceptionWhenDisablingNonExistingCategory() {
+        UUID id = UUID.randomUUID();
+
+        when(categoryRepository.findById(id)).thenReturn(Mono.empty());
+
+        Mono<Void> response = categoryServiceImpl.disableCategory(id);
+
+        StepVerifier.create(response).expectError(CategoryNotFoundException.class)
+                .verify();
+
+        verify(categoryRepository).findById(id);
+        verify(categoryRepository,never()).save(any(Category.class));
+
+    }
+
+    @Test
     void shouldThrowExceptionWhenRenamingToExistingCategoryName() {
         UUID id = UUID.randomUUID();
         RenameCategory renameCategory = new RenameCategory(id, "Jogos");
@@ -243,6 +276,124 @@ public class CategoryServiceImplTest {
         Category saveCategory = captor.getValue();
         assertFalse(saveCategory.isEnabled());
 
+    }
+
+    @Test
+    void shouldFindAllEnabledCategories() {
+        UUID idGames = UUID.randomUUID();
+        UUID idBooks = UUID.randomUUID();
+        Category category = Category.rehydrate(idGames, new CategoryName("Jogos"), true);
+        Category categoryC = Category.rehydrate(idBooks, new CategoryName("Biblioteca"), true);
+
+        when(categoryRepository.findAllEnabled()).thenReturn(Flux.just(category,
+                categoryC));
+
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllEnabled();
+
+        StepVerifier.create(response).assertNext(categoryResponse -> {
+            assertEquals(category.getId(), categoryResponse.id());
+            assertEquals("Jogos", categoryResponse.name());
+            assertTrue(categoryResponse.isEnabled());
+
+        }).assertNext(categoryResponse -> {
+            assertEquals(categoryC.getId(), categoryResponse.id());
+            assertEquals(categoryC.getName().value(), categoryResponse.name());
+            assertTrue(categoryResponse.isEnabled());
+        }).verifyComplete();
+
+        verify(categoryRepository).findAllEnabled();
+
+    }
+
+    @Test
+    void shouldFindAllDisabledCategories() {
+        UUID idGames = UUID.randomUUID();
+        UUID idBooks = UUID.randomUUID();
+        Category category = Category.rehydrate(idGames, new CategoryName("Jogos"), false);
+        Category categoryC = Category.rehydrate(idBooks, new CategoryName("Biblioteca")
+                , false);
+
+        when(categoryRepository.findAllDisabled()).thenReturn(Flux.just(category,
+                categoryC));
+
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllDisabled();
+
+        StepVerifier.create(response).assertNext(categoryResponse -> {
+            assertEquals(category.getId(), categoryResponse.id());
+            assertEquals("Jogos", categoryResponse.name());
+            assertFalse(categoryResponse.isEnabled());
+
+        }).assertNext(categoryResponse -> {
+            assertEquals(categoryC.getId(), categoryResponse.id());
+            assertEquals(categoryC.getName().value(), categoryResponse.name());
+            assertFalse(categoryResponse.isEnabled());
+        }).verifyComplete();
+
+        verify(categoryRepository).findAllDisabled();
+
+    }
+
+    @Test
+    void shouldReturnEmptyFluxWhenThereAreNoEnabledCategories() {
+
+        when(categoryRepository.findAllEnabled()).thenReturn(Flux.empty());
+
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllEnabled();
+
+        StepVerifier.create(response).verifyComplete();
+
+        verify(categoryRepository).findAllEnabled();
+    }
+
+    @Test
+    void shouldReturnEmptyFluxWhenThereAreNoDisabledCategories() {
+
+        when(categoryRepository.findAllDisabled()).thenReturn(Flux.empty());
+
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllDisabled();
+
+        StepVerifier.create(response).verifyComplete();
+
+        verify(categoryRepository).findAllDisabled();
+    }
+
+    @Test
+    void shouldFindAllCategories() {
+
+        UUID idGames = UUID.randomUUID();
+        UUID idBooks = UUID.randomUUID();
+        Category category = Category.rehydrate(idGames, new CategoryName("Jogos"), true);
+        Category categoryC = Category.rehydrate(idBooks, new CategoryName("Biblioteca")
+                , false);
+
+        when(categoryRepository.findAllCategories()).thenReturn(Flux.just(category,
+                categoryC));
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllCategories();
+
+        StepVerifier.create(response).assertNext(categoryResponse -> {
+            assertEquals(category.getId(), categoryResponse.id());
+            assertEquals(category.getName().value(), categoryResponse.name());
+            assertTrue(categoryResponse.isEnabled());
+        }).assertNext(categoryResponse -> {
+            assertEquals(categoryC.getId(), categoryResponse.id());
+            assertEquals(categoryC.getName().value(), categoryResponse.name());
+            assertFalse(categoryResponse.isEnabled());
+        }).verifyComplete();
+
+        verify(categoryRepository).findAllCategories();
+
+    }
+
+    @Test
+    void shouldReturnEmptyFluxWhenThereAreNoCategories() {
+
+        when(categoryRepository.findAllCategories()).thenReturn(Flux.empty());
+
+        Flux<CategoryResponse> response = categoryServiceImpl.findAllCategories();
+
+        StepVerifier.create(response).verifyComplete();
+
+        verify(categoryRepository).findAllCategories();
     }
 
 }
