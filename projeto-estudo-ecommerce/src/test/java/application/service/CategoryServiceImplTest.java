@@ -1,6 +1,9 @@
 package application.service;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.CreateCategoryCommand;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.RenameCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.result.CategoryResult;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.CategoryServiceImpl;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
@@ -49,7 +52,7 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
 
-        Mono<CategoryResponse> response = categoryServiceImpl.findById(id);
+        Mono<CategoryResult> response = categoryServiceImpl.findById(id);
 
         StepVerifier.create(response).assertNext(categoryResponse -> {
             assertEquals(id, categoryResponse.id());
@@ -64,7 +67,7 @@ public class CategoryServiceImplTest {
 
         UUID id = UUID.randomUUID();
         when(categoryRepository.findById(id)).thenReturn(Mono.empty());
-        Mono<CategoryResponse> response = categoryServiceImpl.findById(id);
+        Mono<CategoryResult> response = categoryServiceImpl.findById(id);
 
         StepVerifier.create(response)
                 .expectError(CategoryNotFoundException.class).verify();
@@ -73,7 +76,7 @@ public class CategoryServiceImplTest {
     @Test
     void shouldCreateCategoryWhenNameDoesNotExist() {
 
-        CategoryRequest categoryRequest = new CategoryRequest("Gamer");
+        CreateCategoryCommand categoryRequest = new CreateCategoryCommand("Gamer");
 
         when(categoryRepository.existsByName(new CategoryName("Gamer")))
                 .thenReturn(Mono.just(false));
@@ -83,7 +86,7 @@ public class CategoryServiceImplTest {
                 Mono.just(invocation.getArgument(0))
         );
 
-        Mono<CategoryResponse> categoryResponse =
+        Mono<CategoryResult> categoryResponse =
                 categoryServiceImpl.createCategory(categoryRequest);
 
         StepVerifier.create(categoryResponse).assertNext(response -> {
@@ -96,12 +99,12 @@ public class CategoryServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenCategoryNameAlreadyExists() {
-        CategoryRequest categoryRequest = new CategoryRequest("Gamer");
+        CreateCategoryCommand categoryRequest = new CreateCategoryCommand("Gamer");
 
         when(categoryRepository.existsByName(new CategoryName("Gamer")))
                 .thenReturn(Mono.just(true));
 
-        Mono<CategoryResponse> categoryResponse =
+        Mono<CategoryResult> categoryResponse =
                 categoryServiceImpl.createCategory(categoryRequest);
 
         StepVerifier.create(categoryResponse)
@@ -130,13 +133,13 @@ public class CategoryServiceImplTest {
                 idCategory))
                 .thenReturn(Mono.just(false));
 
-        RenameCategory renameCategory = new RenameCategory(idCategory, jogos);
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand(idCategory, jogos);
 
         when(categoryRepository.save(any(Category.class)))
                 .thenAnswer( invacation ->
                 Mono.just(invacation.getArgument(0)));
 
-        Mono<RenameCategory> renameCategoryResponse = categoryServiceImpl.renameCategory(
+        Mono<CategoryResult> renameCategoryResponse = categoryServiceImpl.renameCategory(
                 idCategory, renameCategory);
 
         StepVerifier.create(renameCategoryResponse).assertNext( response -> {
@@ -153,11 +156,11 @@ public class CategoryServiceImplTest {
     @Test
     void shouldThrowCategoryNotFoundExceptionWhenRenamingNonExistingCategory() {
         UUID id = UUID.randomUUID();
-        RenameCategory renameCategory = new RenameCategory(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
 
         when(categoryRepository.findById(id)).thenReturn(Mono.empty());
 
-        Mono<RenameCategory> response = categoryServiceImpl.renameCategory(id,
+        Mono<CategoryResult> response = categoryServiceImpl.renameCategory(id,
                 renameCategory);
 
         StepVerifier.create(response)
@@ -198,14 +201,14 @@ public class CategoryServiceImplTest {
     @Test
     void shouldThrowExceptionWhenRenamingToExistingCategoryName() {
         UUID id = UUID.randomUUID();
-        RenameCategory renameCategory = new RenameCategory(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
         Category category = Category.rehydrate(id, new CategoryName("Gamer"), true);
 
         when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
         when(categoryRepository.existsByNameAndIdNot(new CategoryName("Jogos"), id))
                 .thenReturn(Mono.just(true));
 
-        Mono<RenameCategory> response = categoryServiceImpl.renameCategory(id,
+        Mono<CategoryResult> response = categoryServiceImpl.renameCategory(id,
                 renameCategory);
 
         StepVerifier.create(response)
@@ -220,11 +223,11 @@ public class CategoryServiceImplTest {
     void shouldReturnCategoryWithoutSavingWhenNameIsUnchanged() {
         UUID id = UUID.randomUUID();
         Category category = Category.rehydrate(id, new CategoryName("Jogos"), true);
-        RenameCategory renameCategory = new RenameCategory(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
 
         when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
 
-        Mono<RenameCategory> response = categoryServiceImpl.renameCategory(id,
+        Mono<CategoryResult> response = categoryServiceImpl.renameCategory(id,
                 renameCategory);
 
         StepVerifier.create(response).assertNext(res -> {
@@ -288,7 +291,7 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findAllEnabled()).thenReturn(Flux.just(category,
                 categoryC));
 
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllEnabled();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllEnabled();
 
         StepVerifier.create(response).assertNext(categoryResponse -> {
             assertEquals(category.getId(), categoryResponse.id());
@@ -316,7 +319,7 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findAllDisabled()).thenReturn(Flux.just(category,
                 categoryC));
 
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllDisabled();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllDisabled();
 
         StepVerifier.create(response).assertNext(categoryResponse -> {
             assertEquals(category.getId(), categoryResponse.id());
@@ -338,7 +341,7 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findAllEnabled()).thenReturn(Flux.empty());
 
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllEnabled();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllEnabled();
 
         StepVerifier.create(response).verifyComplete();
 
@@ -350,7 +353,7 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findAllDisabled()).thenReturn(Flux.empty());
 
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllDisabled();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllDisabled();
 
         StepVerifier.create(response).verifyComplete();
 
@@ -368,7 +371,7 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findAllCategories()).thenReturn(Flux.just(category,
                 categoryC));
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllCategories();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllCategories();
 
         StepVerifier.create(response).assertNext(categoryResponse -> {
             assertEquals(category.getId(), categoryResponse.id());
@@ -389,7 +392,7 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findAllCategories()).thenReturn(Flux.empty());
 
-        Flux<CategoryResponse> response = categoryServiceImpl.findAllCategories();
+        Flux<CategoryResult> response = categoryServiceImpl.findAllCategories();
 
         StepVerifier.create(response).verifyComplete();
 

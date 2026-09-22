@@ -1,11 +1,13 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.CreateCategoryCommand;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.RenameCategoryCommand;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.in.CategoryUseCase;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.CategoryService;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.result.CategoryResult;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.CategoryRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.RenameCategory;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.CategoryResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
@@ -14,7 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryUseCase {
 
     private final CategoryRepository repository;
 
@@ -23,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Mono<CategoryResponse> createCategory(CategoryRequest categoryRequest) {
-        CategoryName categoryName = new CategoryName(categoryRequest.name());
+    public Mono<CategoryResult> createCategory(CreateCategoryCommand command) {
+        CategoryName categoryName = new CategoryName(command.name());
 
         return repository.existsByName(categoryName)
                 .flatMap(exists -> {
@@ -33,22 +35,22 @@ public class CategoryServiceImpl implements CategoryService {
                     }
                     Category category = Category.create(categoryName);
                     return repository.save(category);
-                }).map(CategoryResponse::from);
+                }).map(CategoryResult::from);
     }
 
     @Override
-    public Mono<CategoryResponse> findById(UUID id) {
+    public Mono<CategoryResult> findById(UUID id) {
         return repository.findById(id).switchIfEmpty(
                 Mono.error(new CategoryNotFoundException(id))
-        ).map(CategoryResponse::from);
+        ).map(CategoryResult::from);
     }
 
     @Override
-    public Mono<RenameCategory> renameCategory(UUID id, RenameCategory request) {
+    public Mono<CategoryResult> renameCategory(UUID id, RenameCategoryCommand command) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CategoryNotFoundException(id)))
                 .flatMap(category -> {
-                    CategoryName newName = new CategoryName(request.name());
+                    CategoryName newName = new CategoryName(command.name());
                         if(category.getName().equals(newName)) {
                             return Mono.just(category);
                         }
@@ -58,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
                                         ):renameAndSave(category, newName));
 
 
-                }).map(RenameCategory::from);
+                }).map(CategoryResult::from);
 
     }
 
@@ -81,18 +83,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Flux<CategoryResponse> findAllCategories() {
-        return repository.findAllCategories().map(CategoryResponse::from);
+    public Flux<CategoryResult> findAllCategories() {
+        return repository.findAllCategories().map(CategoryResult::from);
     }
 
     @Override
-    public Flux<CategoryResponse> findAllDisabled() {
-        return repository.findAllDisabled().map(CategoryResponse::from);
+    public Flux<CategoryResult> findAllDisabled() {
+        return repository.findAllDisabled().map(CategoryResult::from);
     }
 
     @Override
-    public Flux<CategoryResponse> findAllEnabled() {
-        return repository.findAllEnabled().map(CategoryResponse::from);
+    public Flux<CategoryResult> findAllEnabled() {
+        return repository.findAllEnabled().map(CategoryResult::from);
     }
 
     private Mono<Category> renameAndSave(Category category, CategoryName newName) {

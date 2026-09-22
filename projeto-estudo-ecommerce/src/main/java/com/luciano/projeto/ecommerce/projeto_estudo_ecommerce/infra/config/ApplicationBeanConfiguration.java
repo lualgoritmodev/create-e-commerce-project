@@ -1,8 +1,8 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.config;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.in.CategoryUseCase;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.ProductRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.CategoryService;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.ProductService;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.CategoryServiceImpl;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.ProductServiceImpl;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationBeanConfiguration {
 
     @Bean
-    CategoryService categoryService(CategoryRepository repository) {
+    CategoryUseCase categoryUseCase(CategoryRepository repository) {
         return new CategoryServiceImpl(repository);
     }
 
