@@ -3,9 +3,9 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.servi
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.ProductRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.Money;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.ProductName;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.ProductUpdateRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.ProductResponse;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.ProductRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.ProductUpdateRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;

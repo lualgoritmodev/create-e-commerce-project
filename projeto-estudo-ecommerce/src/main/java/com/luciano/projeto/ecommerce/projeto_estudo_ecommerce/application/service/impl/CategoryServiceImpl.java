@@ -1,15 +1,13 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.CreateCategoryCommand;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.command.RenameCategoryCommand;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.CreateCategoryCommand;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.RenameCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.in.CategoryUseCase;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.result.CategoryResult;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.CategoryResult;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.request.RenameCategory;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.controller.dto.response.CategoryResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
