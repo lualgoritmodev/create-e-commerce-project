@@ -1,20 +1,18 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.RenameCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.in.CategoryUseCase;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.CategoryRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.RenameCategory;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.response.CategoryResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.mapper.CategoryWebMapper;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import org.springframework.http.CacheControl;
+import java.time.Duration;
 import java.net.URI;
 import java.util.UUID;
 
@@ -53,27 +51,37 @@ public class CategoryController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<CategoryResponse>> findById(
             @PathVariable UUID id) {
-        return categoryUseCase.findById(id)
+         return categoryUseCase.findById(id)
                 .map(categoryWebMapper::toResponse)
-                .map(ResponseEntity::ok);
+                 .map(ResponseEntity::ok);
+
     }
 
     @GetMapping("/disabled")
-    public Flux<CategoryResponse> findAllDisabled() {
-        return categoryUseCase.findAllDisabled()
+    public ResponseEntity<Flux<CategoryResponse>> findAllDisabled() {
+         Flux<CategoryResponse> categories = categoryUseCase.findAllDisabled()
                 .map(categoryWebMapper::toResponse);
+
+         return ResponseEntity.ok()
+                 .cacheControl(CacheControl.noStore())
+                 .body(categories);
+
     }
 
     @GetMapping("/enabled")
-    public Flux<CategoryResponse> findAllEnabled() {
-        return categoryUseCase.findAllEnabled()
+    public ResponseEntity<Flux<CategoryResponse>> findAllEnabled() {
+        Flux<CategoryResponse> categories = categoryUseCase.findAllEnabled()
                 .map(categoryWebMapper::toResponse);
 
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(Duration.ofMinutes(1))
+                        .cachePublic())
+                .body(categories);
     }
 
     @PatchMapping("/{id}/name")
     public Mono<ResponseEntity<CategoryResponse>> renameCategory(
-            @Valid @PathVariable UUID id, CategoryRequest request) {
+             @PathVariable UUID id, @Valid @RequestBody CategoryRequest request) {
 
         return categoryUseCase.renameCategory(id,
                         categoryWebMapper.toRenameCategory(request))
@@ -83,7 +91,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}/enable")
-    public Mono<ResponseEntity<Void>> enableCategory(@Valid @PathVariable UUID id) {
+    public Mono<ResponseEntity<Void>> enableCategory(@PathVariable UUID id) {
 
         return categoryUseCase.enableCategory(id)
                 .thenReturn(ResponseEntity.noContent().build());
@@ -98,11 +106,15 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/all")
-    public Flux<CategoryResponse> findAllCategories() {
+    @GetMapping()
+    public ResponseEntity<Flux<CategoryResponse>> findAllCategories() {
 
-        return categoryUseCase.findAllCategories()
+        Flux<CategoryResponse> category =  categoryUseCase.findAllCategories()
                 .map(categoryWebMapper::toResponse);
+
+        return ResponseEntity.ok()
+                .body(category);
+
     }
 
 }

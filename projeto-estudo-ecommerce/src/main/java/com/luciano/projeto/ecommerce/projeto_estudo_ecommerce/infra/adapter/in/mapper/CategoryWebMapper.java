@@ -22,4 +22,5 @@ public class CategoryWebMapper {
     public RenameCategoryCommand toRenameCategory(CategoryRequest request) {
         return new RenameCategoryCommand(null, request.name());
     }
+
 }
