@@ -4,7 +4,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.d
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.CreateCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.RenameCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.CategoryRequest;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.RenameCategory;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.RenameCategoryRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.response.CategoryResponse;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ public class CategoryWebMapper {
         return new CategoryResponse(result.id(), result.name(), result.isEnabled());
     }
 
-    public RenameCategoryCommand toRenameCategory(CategoryRequest request) {
-        return new RenameCategoryCommand(null, request.name());
+    public RenameCategoryCommand toRenameCategoryCommand(RenameCategoryRequest request) {
+        return new RenameCategoryCommand(request.name());
     }
 
 }

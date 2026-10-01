@@ -8,7 +8,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.d
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

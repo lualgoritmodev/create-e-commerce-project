@@ -2,18 +2,26 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.in.CategoryUseCase;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.CategoryRequest;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.RenameCategoryRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.response.CategoryResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.mapper.CategoryWebMapper;
 import jakarta.validation.Valid;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.springframework.http.CacheControl;
-import java.time.Duration;
+
 import java.net.URI;
+import java.time.Duration;
 import java.util.UUID;
 
 @RestController
@@ -81,10 +89,10 @@ public class CategoryController {
 
     @PatchMapping("/{id}/name")
     public Mono<ResponseEntity<CategoryResponse>> renameCategory(
-             @PathVariable UUID id, @Valid @RequestBody CategoryRequest request) {
+             @PathVariable UUID id, @Valid @RequestBody RenameCategoryRequest request) {
 
         return categoryUseCase.renameCategory(id,
-                        categoryWebMapper.toRenameCategory(request))
+                        categoryWebMapper.toRenameCategoryCommand(request))
                 .map(categoryWebMapper::toResponse)
                 .map(ResponseEntity::ok);
 
@@ -109,11 +117,12 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<Flux<CategoryResponse>> findAllCategories() {
 
-        Flux<CategoryResponse> category =  categoryUseCase.findAllCategories()
+        Flux<CategoryResponse> categories =  categoryUseCase.findAllCategories()
                 .map(categoryWebMapper::toResponse);
 
         return ResponseEntity.ok()
-                .body(category);
+                .cacheControl(CacheControl.noStore())
+                .body(categories);
 
     }
 

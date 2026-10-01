@@ -1,32 +1,36 @@
 package application.service;
 
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.CategoryResult;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.CreateCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.command.RenameCategoryCommand;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.dto.CategoryResult;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.impl.CategoryServiceImpl;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.CategoryNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.eq;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -130,7 +134,7 @@ public class CategoryServiceImplTest {
                 idCategory))
                 .thenReturn(Mono.just(false));
 
-        RenameCategoryCommand renameCategory = new RenameCategoryCommand(idCategory, jogos);
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand(jogos);
 
         when(categoryRepository.save(any(Category.class)))
                 .thenAnswer( invacation ->
@@ -153,7 +157,7 @@ public class CategoryServiceImplTest {
     @Test
     void shouldThrowCategoryNotFoundExceptionWhenRenamingNonExistingCategory() {
         UUID id = UUID.randomUUID();
-        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand("Jogos");
 
         when(categoryRepository.findById(id)).thenReturn(Mono.empty());
 
@@ -198,7 +202,7 @@ public class CategoryServiceImplTest {
     @Test
     void shouldThrowExceptionWhenRenamingToExistingCategoryName() {
         UUID id = UUID.randomUUID();
-        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand("Jogos");
         Category category = Category.rehydrate(id, new CategoryName("Gamer"), true);
 
         when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
@@ -220,7 +224,7 @@ public class CategoryServiceImplTest {
     void shouldReturnCategoryWithoutSavingWhenNameIsUnchanged() {
         UUID id = UUID.randomUUID();
         Category category = Category.rehydrate(id, new CategoryName("Jogos"), true);
-        RenameCategoryCommand renameCategory = new RenameCategoryCommand(id, "Jogos");
+        RenameCategoryCommand renameCategory = new RenameCategoryCommand("Jogos");
 
         when(categoryRepository.findById(id)).thenReturn(Mono.just(category));
 
