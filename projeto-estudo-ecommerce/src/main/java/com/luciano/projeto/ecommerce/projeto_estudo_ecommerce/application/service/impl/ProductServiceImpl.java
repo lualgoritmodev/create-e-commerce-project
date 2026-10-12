@@ -7,7 +7,7 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.d
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.request.ProductUpdateRequest;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.dto.response.ProductResponse;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.exception.productnotfoundexception.ProductNotFoundException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.productnotfoundexception.ProductNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Product;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.service.ProductService;
