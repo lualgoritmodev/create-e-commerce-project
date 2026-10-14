@@ -2,7 +2,6 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.response.ApiErrorResponse;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.productnotfoundexception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,17 +29,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleCategoryNotFound(
-            ResourceNotFoundException exception,
+            CategoryNotFoundException exception,
             ServerWebExchange exchange
     ) {
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
         ApiErrorResponse response =  buildErrorResponse(
-                HttpStatus.NOT_FOUND,
+                status,
                 exception.getMessage(),
                 exchange
         );
 
-        return
-                ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(status)
                         .body(response);
     }
 
