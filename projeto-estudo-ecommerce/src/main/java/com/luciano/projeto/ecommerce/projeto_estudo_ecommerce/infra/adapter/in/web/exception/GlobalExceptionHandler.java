@@ -3,11 +3,13 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.response.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -28,21 +30,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleCategoryNotFound(
+    public ResponseEntity<ProblemDetail> handleCategoryNotFound(
             CategoryNotFoundException exception,
             ServerWebExchange exchange
     ) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        ApiErrorResponse response =  buildErrorResponse(
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 status,
-                exception.getMessage(),
-                exchange
+                exception.getMessage()
+        );
+        problem.setTitle("Category not found");
+        problem.setInstance(
+                URI.create(exchange.getRequest().getPath().value())
+        );
+        problem.setProperty(
+                "code",
+                "CATEGORY_NOT_FOUND"
         );
 
         return ResponseEntity.status(status)
-                        .body(response);
+                        .body(problem);
+
     }
 
 //    @ExceptionHandler(ProductNotFoundException.class)
