@@ -1,7 +1,7 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.out;
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.port.out.CategoryRepository;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.CategoryNameAlreadyExistsException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.out.persistence.entity.CategoryEntity;

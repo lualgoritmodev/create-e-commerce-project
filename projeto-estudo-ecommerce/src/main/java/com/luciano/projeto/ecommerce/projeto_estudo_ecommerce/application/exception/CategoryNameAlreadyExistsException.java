@@ -1,4 +1,4 @@
-package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception;
+package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception;
 
 public class CategoryNameAlreadyExistsException extends RuntimeException {
 
