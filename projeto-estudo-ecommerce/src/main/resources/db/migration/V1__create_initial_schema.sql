@@ -34,7 +34,7 @@ CREATE TABLE tb_category
 (
     id     UUID PRIMARY KEY,
     name   VARCHAR(100) NOT NULL,
-    active BOOLEAN      NOT NULL DEFAULT TRUE,
+    enabled BOOLEAN      NOT NULL DEFAULT TRUE,
 
     CONSTRAINT uk_category_name UNIQUE (name)
 );
@@ -46,7 +46,7 @@ CREATE TABLE tb_product
     name        VARCHAR(150)  NOT NULL,
     description VARCHAR(500)  NOT NULL,
     price       NUMERIC(12,2) NOT NULL,
-    active      BOOLEAN       NOT NULL DEFAULT TRUE,
+    enabled      BOOLEAN       NOT NULL DEFAULT TRUE,
     created_at  TIMESTAMP     NOT NULL,
     stock       INTEGER       NOT NULL,
     category_id UUID          NOT NULL,

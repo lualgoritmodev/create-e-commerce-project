@@ -2,44 +2,32 @@ package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.
 
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNameAlreadyExistsException;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.response.ApiErrorResponse;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidCategoryNameException;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.infra.adapter.in.web.exception.dto.FieldValidationError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ServerWebExchange;
-
+import org.springframework.web.server.ServerWebInputException;
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    private ApiErrorResponse buildErrorResponse(
-//            HttpStatus status,
-//            String message,
-//            ServerWebExchange exchange
-//    ) {
-//        return new ApiErrorResponse(
-//                LocalDateTime.now(),
-//                status.value(),
-//                status.getReasonPhrase(),
-//                message,
-//                exchange.getRequest().getPath().value()
-//        );
-//    }
-
-    private ResponseEntity<ProblemDetail> buildProblem(
+    private ProblemDetail createProblemDetail(
             HttpStatus status,
             String title,
+            String detail,
             String code,
-            Exception exception,
             ServerWebExchange exchange
     ) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 status,
-                exception.getMessage()
+                detail
         );
 
         problem.setTitle(title);
@@ -47,6 +35,55 @@ public class GlobalExceptionHandler {
                 URI.create(exchange.getRequest().getPath().value())
         );
         problem.setProperty("code", code);
+
+        return problem;
+    }
+
+    @ExceptionHandler(WebExchangeBindException.class)
+    public ResponseEntity<ProblemDetail> handleValidation(
+            WebExchangeBindException exception,
+            ServerWebExchange exchange
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        List<FieldValidationError> errors = exception
+                .getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> new FieldValidationError(
+                        error.getField(),
+                        error.getDefaultMessage()
+                ))
+                .toList();
+
+        ProblemDetail problem = createProblemDetail(
+                status,
+                "Validation error",
+                "One or more fields are invalid",
+                "VALIDATION_ERROR",
+                exchange
+        );
+
+        problem.setProperty("errors", errors);
+
+        return ResponseEntity.status(status)
+                .body(problem);
+    }
+
+    @ExceptionHandler(ServerWebInputException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidRequest(
+            ServerWebInputException exception,
+            ServerWebExchange exchange
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        ProblemDetail problem = createProblemDetail(
+                status,
+                "Invalid request",
+                "The request could not be read or converted",
+                "INVALID_REQUEST",
+                exchange
+        );
 
         return ResponseEntity.status(status)
                 .body(problem);
@@ -58,14 +95,17 @@ public class GlobalExceptionHandler {
             ServerWebExchange exchange
     ) {
 
-        return buildProblem(
-                HttpStatus.NOT_FOUND,
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        ProblemDetail problem =  createProblemDetail(
+                status,
                 "Category not found",
+                exception.getMessage(),
                 "CATEGORY_NOT_FOUND",
-                exception,
                 exchange
         );
 
+        return ResponseEntity.status(status).body(problem);
     }
 
     @ExceptionHandler(CategoryNameAlreadyExistsException.class)
@@ -73,31 +113,38 @@ public class GlobalExceptionHandler {
             CategoryNameAlreadyExistsException exception,
             ServerWebExchange exchange
     ) {
-        return buildProblem(
-                HttpStatus.CONFLICT,
+
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        ProblemDetail problem =  createProblemDetail(
+                status,
                 "Category name already exists",
+                exception.getMessage(),
                 "CATEGORY_NAME_ALREADY_EXISTS",
-                exception,
                 exchange
         );
-    }
-//    @ExceptionHandler(ProductNotFoundException.class)
-//    public Mono<ResponseEntity<ApiErrorResponse>>handleProductKotFound(
-//            ProductNotFoundException exception,
-//            ServerWebExchange exchange
-//    ) {
-//        ApiErrorResponse response = new ApiErrorResponse(
-//                LocalDateTime.now(),
-//                HttpStatus.NOT_FOUND.value(),
-//                HttpStatus.NOT_FOUND.getReasonPhrase(),
-//                exception.getMessage(),
-//                exchange.getRequest().getPath().value()
-//        );
-//
-//        return Mono.just(
-//                ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                        .body(response)
-//        );
 
-//    }
+         return ResponseEntity.status(status).body(problem);
+
+    }
+
+    @ExceptionHandler(InvalidCategoryNameException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidCategoryName(
+            InvalidCategoryNameException exception,
+            ServerWebExchange exchange
+    ) {
+
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+
+        ProblemDetail problem = createProblemDetail(
+                status,
+                "Invalid category name",
+                exception.getMessage(),
+                "INVALID_CATEGORY_NAME",
+                exchange
+        );
+
+        return ResponseEntity.status(status).body(problem);
+    }
+
 }

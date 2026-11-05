@@ -1,4 +1,4 @@
-INSERT INTO tb_category (id, name, active)
+INSERT INTO tb_category (id, name, enabled)
 VALUES
     ('11111111-1111-1111-1111-111111111111', 'Informática', TRUE),
     ('22222222-2222-2222-2222-222222222222', 'Celulares', TRUE),

@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 public record CategoryName(String value) {
 
     private static final Pattern MULTIPLE_SPACES = Pattern.compile("\\s+");
-    private static final Pattern CONTAINS_NUMBER = Pattern.compile("\\p{N}");
 
     public CategoryName {value = validateAndNormalize(value); }
 
@@ -15,7 +14,6 @@ public record CategoryName(String value) {
         validateRequired(value);
 
         String normalized = normalize(value);
-        validateContent(normalized);
 
         return normalized;
     }
@@ -28,15 +26,9 @@ public record CategoryName(String value) {
     }
 
     private static String normalize(String value) {
-        String trimmedValue = value.trim();
-        return MULTIPLE_SPACES.matcher(trimmedValue).replaceAll(" ");
+        String strippedValue  = value.strip();
+        return MULTIPLE_SPACES.matcher(strippedValue).replaceAll(" ");
 
-    }
-
-    private static void validateContent(String value) {
-        if(CONTAINS_NUMBER.matcher(value).find()) {
-            throw new InvalidCategoryNameException();
-        }
     }
 
 }
