@@ -9,6 +9,8 @@ import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.except
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.Category;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CategoryName;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.application.exception.CategoryNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
@@ -16,6 +18,9 @@ import java.util.UUID;
 public class CategoryServiceImpl implements CategoryUseCase {
 
     private final CategoryRepository repository;
+
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     public CategoryServiceImpl(CategoryRepository repository) {
         this.repository = repository;
@@ -32,7 +37,12 @@ public class CategoryServiceImpl implements CategoryUseCase {
                     }
                     Category category = Category.create(categoryName);
                     return repository.save(category);
-                }).map(CategoryResult::from);
+                }).map(CategoryResult::from)
+                .doOnNext(result -> {
+                    LOGGER.info("Category created successfully categoryId={}",
+                            result.id());
+                });
+
     }
 
     @Override
@@ -40,10 +50,12 @@ public class CategoryServiceImpl implements CategoryUseCase {
         return repository.findById(id).switchIfEmpty(
                 Mono.error(new CategoryNotFoundException(id))
         ).map(CategoryResult::from);
+
     }
 
     @Override
     public Mono<CategoryResult> renameCategory(UUID id, RenameCategoryCommand command) {
+
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CategoryNotFoundException(id)))
                 .flatMap(category -> {
@@ -51,6 +63,7 @@ public class CategoryServiceImpl implements CategoryUseCase {
                         if(category.getName().equals(newName)) {
                             return Mono.just(category);
                         }
+
                     return repository.existsByNameAndIdNot(newName, id).flatMap(exists ->
                                 exists ?
                                         Mono.error(new CategoryNameAlreadyExistsException()
@@ -67,7 +80,10 @@ public class CategoryServiceImpl implements CategoryUseCase {
                 Mono.error(new CategoryNotFoundException(id))
         ).flatMap(category -> { category.enable();
             return repository.save(category);
-        }).then();
+        }).doOnNext(category
+                -> LOGGER.info("Category enable successfully categoryId={}",
+                category.getId())).then();
+
     }
 
     @Override
@@ -76,7 +92,9 @@ public class CategoryServiceImpl implements CategoryUseCase {
                 Mono.error(new CategoryNotFoundException(id))
         ).flatMap(category -> { category.disable();
             return repository.save(category);
-         }).then();
+         }).doOnNext(categorySevad ->
+             LOGGER.info("Category disabled successfully categoryId={}",
+                     categorySevad.getId())).then();
     }
 
     @Override
@@ -96,6 +114,9 @@ public class CategoryServiceImpl implements CategoryUseCase {
 
     private Mono<Category> renameAndSave(Category category, CategoryName newName) {
         category.rename(newName);
-        return repository.save(category);
+        return repository.save(category).doOnNext(savedCategory -> {
+            LOGGER.info("Category renamed successfully categoryId={}",
+                    savedCategory.getId());
+        });
     }
 }
