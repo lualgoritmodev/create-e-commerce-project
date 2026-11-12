@@ -81,7 +81,7 @@ public class CategoryServiceImpl implements CategoryUseCase {
         ).flatMap(category -> { category.enable();
             return repository.save(category);
         }).doOnNext(category
-                -> LOGGER.info("Category enable successfully categoryId={}",
+                -> LOGGER.info("Category enabled successfully categoryId={}",
                 category.getId())).then();
 
     }
@@ -92,9 +92,9 @@ public class CategoryServiceImpl implements CategoryUseCase {
                 Mono.error(new CategoryNotFoundException(id))
         ).flatMap(category -> { category.disable();
             return repository.save(category);
-         }).doOnNext(categorySevad ->
+         }).doOnNext(savedCategory ->
              LOGGER.info("Category disabled successfully categoryId={}",
-                     categorySevad.getId())).then();
+                     savedCategory.getId())).then();
     }
 
     @Override
