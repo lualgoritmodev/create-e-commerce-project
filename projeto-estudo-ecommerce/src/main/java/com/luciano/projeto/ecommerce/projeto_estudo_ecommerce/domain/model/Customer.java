@@ -1,7 +1,6 @@
 package com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model;
 
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.exception.InvalidNameOfCustomer;
-import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.utilenum.Status;
+import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.model.utilenum.CustomerStatus;
 import com.luciano.projeto.ecommerce.projeto_estudo_ecommerce.domain.valueobject.CustomerName;
 
 import java.time.LocalDate;
@@ -14,75 +13,13 @@ public class Customer {
     private String cpf;
     private String email;
     private LocalDate birthDate;
-    private Status status = Status.INACTIVE;
-    private boolean active;
+    private CustomerStatus status;
 
-    private Customer() {}
-
-    public Customer(UUID id, CustomerName name, String cpf,
-                    String email, LocalDate birthDate,
-                    Status status, Boolean active) {
-        this.id = id;
-        this.name = name;
-        this.cpf = cpf;
-        this.email = email;
-        this.birthDate = birthDate;
-        this.status = status;
-        this.active = active;
+    private Customer() {
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public CustomerName getName() {
-        return name;
-    }
-
-    public void rename(CustomerName name) {
-        if(name == null) {
-            throw new InvalidNameOfCustomer();
-        }
-        this.name = name;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public Status getStatus() {
+    public CustomerStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
 }
